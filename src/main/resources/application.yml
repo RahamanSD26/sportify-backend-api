@@ -8,4 +8,4 @@ spring:
   data:
     mongodb:
       auto-index-creation: false
-      uri: mongodb://mongo:yVpOervNTOrbdJOHoejtZvYAYwMLQHBA@viaduct.proxy.rlwy.net:10124/mongo
+      uri: mongodb://mongo:yVpOervNTOrbdJOHoejtZvYAYwMLQHBA@viaduct.proxy.rlwy.net:10124/sportify-ipl

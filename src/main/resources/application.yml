@@ -1,0 +1,11 @@
+server:
+  port: 8083
+sidpik:
+  environment: LOCAL
+spring:
+  application:
+    name: sportify-backend-api
+  data:
+    mongodb:
+      auto-index-creation: false
+      uri: mongodb://mongo:yVpOervNTOrbdJOHoejtZvYAYwMLQHBA@viaduct.proxy.rlwy.net:10124/sportify-ipl

@@ -1,0 +1,9 @@
+server:
+  port: 8082
+sidpik:
+  environment: PROD
+spring:
+  data:
+    mongodb:
+      auto-index-creation: false
+      uri: mongodb://prod-db-host:27017/prod-database

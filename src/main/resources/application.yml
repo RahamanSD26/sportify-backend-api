@@ -8,4 +8,4 @@ spring:
   data:
     mongodb:
       auto-index-creation: false
-      uri: mongodb://mongo:yVpOervNTOrbdJOHoejtZvYAYwMLQHBA@viaduct.proxy.rlwy.net:10124/test
+      uri: mongodb+srv://vishesh:vishesh12345@cluster0.sbeclcx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0

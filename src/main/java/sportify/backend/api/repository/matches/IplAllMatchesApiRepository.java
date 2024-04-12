@@ -24,4 +24,5 @@ public interface IplAllMatchesApiRepository extends MongoRepository<IplAllMatche
     Optional<IplAllMatchesApi> findByMatchId(String id);
     List<IplAllMatchesApi> findByTeamInfoShortnameOrderByIntMatchNumberAsc(String shortName);
    List<IplAllMatchesApi> findByTeamInfoShortnameAndVenueOrderByIntMatchNumberAsc(String shortName, String venue);
+   List<IplAllMatchesApi> findByIsActiveAndTeamInfoShortnameAndVenueOrderByIntMatchNumberAsc(Boolean isActive,String shortName, String venue);
 }

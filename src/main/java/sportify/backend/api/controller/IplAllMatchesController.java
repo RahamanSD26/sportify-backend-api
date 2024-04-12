@@ -59,4 +59,8 @@ public class IplAllMatchesController {
     public ResponseEntity<List<IplAllMatchesApi>> getEntitiesByTeamNameAndVenue(@RequestParam String shortName,@RequestParam String venue) throws Exception {
         return new ResponseEntity<>(iplAllMatchesApiService.getEntitiesByTeamNameAndVenue(shortName,venue),HttpStatus.OK);
     }
+    @GetMapping("/listbyteamnamevenueandstatus/{status}")
+    public ResponseEntity<List<IplAllMatchesApi>> getEntitiesByTeamNameAndVenueAndSatus(@PathVariable(name = "status") Boolean status,@RequestParam String shortName,@RequestParam String venue) throws Exception {
+        return new ResponseEntity<>(iplAllMatchesApiService.getEntitiesByTeamNameAndVenueAndStatus(status,shortName,venue),HttpStatus.OK);
+    }
 }

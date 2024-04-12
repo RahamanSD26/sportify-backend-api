@@ -27,13 +27,10 @@ public class IplScoreCardApiMapper {
         entity.setTossWinner(dto.getTossWinner());
         entity.setTossChoice(dto.getTossChoice());
         entity.setSeriesId(dto.getSeriesId());
-        entity.setBatting(dto.getBatting());
-        entity.setBowling(dto.getBowling());
-        entity.setCatching(dto.getCatching());
-        entity.setExtras(dto.getExtras());
-//        entity.setTotals(dto.getTotals());
-        entity.setInning(dto.getInning());
+        entity.setScoreCardList(dto.getScoreCardList());
         entity.setMatchId(dto.getMatchId());
+        entity.setIsMatchStarted(dto.getIsMatchStarted());
+        entity.setIsMatchEnded(dto.getIsMatchEnded());
         return entity;
     }
 
@@ -59,13 +56,10 @@ public class IplScoreCardApiMapper {
         dto.setTossWinner(entity.getTossWinner());
         dto.setTossChoice(entity.getTossChoice());
         dto.setSeriesId(entity.getSeriesId());
-        dto.setBatting(entity.getBatting());
-        dto.setBowling(entity.getBowling());
-        dto.setCatching(entity.getCatching());
-        dto.setExtras(entity.getExtras());
-//        dto.setTotals(entity.getTotals());
-        dto.setInning(entity.getInning());
+        dto.setScoreCardList(entity.getScoreCardList());
         dto.setMatchId(entity.getMatchId());
+        dto.setIsMatchStarted(entity.getIsMatchStarted());
+        dto.setIsMatchEnded(entity.getIsMatchEnded());
         return dto;
     }
 
@@ -100,23 +94,14 @@ public class IplScoreCardApiMapper {
         if(newDto.getSeriesId()!=null){
             currentDto.setSeriesId(newDto.getSeriesId());
         }
-        if(newDto.getBatting()!=null){
-            currentDto.setBatting(newDto.getBatting());
+        if(newDto.getScoreCardList()!=null){
+            currentDto.setScoreCardList(newDto.getScoreCardList());
         }
-        if(newDto.getBowling()!=null){
-            currentDto.setBowling(newDto.getBowling());
+        if(newDto.getIsMatchStarted()!=null){
+            currentDto.setIsMatchStarted(newDto.getIsMatchStarted());
         }
-        if(newDto.getCatching()!=null){
-            currentDto.setCatching(newDto.getCatching());
-        }
-        if(newDto.getExtras()!=null){
-            currentDto.setExtras(newDto.getExtras());
-        }
-//        if(newDto.getTotals()!=null){
-//            currentDto.setExtras(newDto.getExtras());
-//        }
-        if(newDto.getInning()!=null){
-            currentDto.setInning(newDto.getInning());
+        if(newDto.getIsMatchEnded()!=null){
+            currentDto.setIsMatchEnded(newDto.getIsMatchEnded());
         }
         return currentDto;
     }

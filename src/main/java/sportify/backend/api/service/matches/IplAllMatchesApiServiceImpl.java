@@ -104,7 +104,7 @@ public class IplAllMatchesApiServiceImpl implements IplAllMatchesApiService{
     }
 
     @Override
-    public List<IplAllMatchesApi> getEntitiesByStatus(boolean isActive) throws Exception {
+    public List<IplAllMatchesApi> getEntitiesByStatus(Boolean isActive) throws Exception {
               List<IplAllMatchesApi> iplAllMatchesApiList=iplAllMatchesApiRepository.findByIsActiveOrderByIntMatchNumberAsc(isActive);
               if(iplAllMatchesApiList.isEmpty()){
                   return Collections.emptyList();
@@ -137,6 +137,15 @@ public class IplAllMatchesApiServiceImpl implements IplAllMatchesApiService{
               return Collections.emptyList();
           }
           return iplAllMatchesApiList;
+    }
+
+    @Override
+    public List<IplAllMatchesApi> getEntitiesByTeamNameAndVenueAndStatus(Boolean status,String shortName, String venue) {
+        List<IplAllMatchesApi>  iplAllMatchesApiList  =iplAllMatchesApiRepository.findByIsActiveAndTeamInfoShortnameAndVenueOrderByIntMatchNumberAsc(status,shortName,venue);
+        if(iplAllMatchesApiList.isEmpty()){
+            return Collections.emptyList();
+        }
+        return iplAllMatchesApiList;
     }
 
     private String getNewGenratedDepartmentId() throws Exception{

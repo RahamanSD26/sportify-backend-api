@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import sportify.backend.api.domain.BaseEntity;
 import util.JavaApiClass.iplscorecard.*;
 import java.util.List;
+import java.util.Map;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,15 +22,12 @@ public class IplScoreCardApi extends BaseEntity {
     private String status;
     private String dateTimeGMT;
     private List<TeamInfo> teamInfo;
-    private List<Score> scoreList;
+    private Map<String,Score> scoreList;
     private String tossWinner;
     private String tossChoice;
     private String seriesId;
-    private List<Batting> batting;
-    private List<Bowling> bowling;
-    private List<Catching> catching;
-    private Extras extras;
-//    private Totals totals;
-    private String inning;
+    private Map<String,ScoreCard> scoreCardList;
+    private Boolean isMatchStarted;
+    private Boolean isMatchEnded;
 
 }

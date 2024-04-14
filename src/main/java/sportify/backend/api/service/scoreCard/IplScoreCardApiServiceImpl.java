@@ -37,53 +37,54 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
 
         IplScoreCard iplScoreCard = cricketDataService.fetchDataFromApi(IplScoreCard.class, match.getMatchId(), Constants.IPL_SCORE_CARD);
 
-        IplScoreCardApiDto iplScoreCardApiDto = new IplScoreCardApiDto();
-        Optional<IplScoreCardApiDto> iplScoreCardApiDtoOptional = iplScoreCardApiRepository.findByMatchId(iplScoreCard.getMatch().getId());
+        Optional<IplScoreCardApiDto> existingScoreCardOptional = iplScoreCardApiRepository.findByMatchId(iplScoreCard.getMatch().getId());
 
-        // Checking existing ScoreCard
-        if (iplScoreCardApiDtoOptional.isEmpty()) {
-            iplScoreCardApiDto.setName(iplScoreCard.getMatch().getName());
-            iplScoreCardApiDto.setVenue(iplScoreCard.getMatch().getVenue());
-            iplScoreCardApiDto.setStatus(iplScoreCard.getStatus());
-            iplScoreCardApiDto.setDateTimeGMT(iplScoreCard.getMatch().getDateTimeGMT());
-            iplScoreCardApiDto.setTeamInfo(iplScoreCard.getMatch().getTeamInfo());
-            iplScoreCardApiDto.setTossWinner(iplScoreCard.getMatch().getTossWinner());
-            iplScoreCardApiDto.setTossChoice(iplScoreCard.getMatch().getTossChoice());
-            iplScoreCardApiDto.setSeriesId(iplScoreCard.getMatch().getSeries_id());
-            iplScoreCardApiDto.setMatchId(iplScoreCard.getMatch().getId());
-            iplScoreCardApiDto.setIsMatchStarted(iplScoreCard.getMatch().isMatchStarted());
-            iplScoreCardApiDto.setIsMatchEnded(iplScoreCard.getMatch().isMatchEnded());
-
-            // Initialize scoreList as a map
-            Map<String,Score> scoreMap = new HashMap<>();
-
-            List<Score> scoreList = iplScoreCard.getMatch().getScore();
-            if (scoreList != null) {
-                // Accumulating details from scoreCardList
-                for (Score score : scoreList) {
-                    // Extracting inning from each scoreCard
-                    String inning = score.getInning().replace("Inning 1","").trim();
-                    scoreMap.put(inning,score);
-                }
-            }
-
-            // Initialize scoreCardList as a map
-            Map<String,ScoreCard> scoreCardMap=new HashMap<>();
-
-            List<ScoreCard>scoreCardList= iplScoreCard.getMatch().getScorecard();
-            if(scoreCardList != null){
-
-                for(ScoreCard scoreCard:scoreCardList){
-                    String inning=scoreCard.getInning().replace("Inning 1","").trim();
-                    scoreCardMap.put(inning,scoreCard);
-                }
-            }
-
-            iplScoreCardApiDto.setScoreList(scoreMap);
-            iplScoreCardApiDto.setScoreCardList(scoreCardMap);
-            return IplScoreCardApiMapper.toDTO(iplScoreCardApiRepository.save(IplScoreCardApiMapper.toEntity(iplScoreCardApiDto)));
+        // Fetch the existing entity from the database
+        IplScoreCardApiDto iplScoreCardApiDto;
+        if (existingScoreCardOptional.isPresent()) {
+            iplScoreCardApiDto = existingScoreCardOptional.get();
+        } else {
+            // If entity does not exist, create a new one
+            iplScoreCardApiDto = new IplScoreCardApiDto();
         }
-        throw new Exception("ScoreCard already created");
+
+        // Update other fields of the entity if needed
+        iplScoreCardApiDto.setName(iplScoreCard.getMatch().getName());
+        iplScoreCardApiDto.setVenue(iplScoreCard.getMatch().getVenue());
+        iplScoreCardApiDto.setStatus(iplScoreCard.getStatus());
+        iplScoreCardApiDto.setDateTimeGMT(iplScoreCard.getMatch().getDateTimeGMT());
+        iplScoreCardApiDto.setTeamInfo(iplScoreCard.getMatch().getTeamInfo());
+        iplScoreCardApiDto.setTossWinner(iplScoreCard.getMatch().getTossWinner());
+        iplScoreCardApiDto.setTossChoice(iplScoreCard.getMatch().getTossChoice());
+        iplScoreCardApiDto.setSeriesId(iplScoreCard.getMatch().getSeries_id());
+        iplScoreCardApiDto.setMatchId(iplScoreCard.getMatch().getId());
+        iplScoreCardApiDto.setIsMatchStarted(iplScoreCard.getMatch().isMatchStarted());
+        iplScoreCardApiDto.setIsMatchEnded(iplScoreCard.getMatch().isMatchEnded());
+
+        // Update scoreMap and scoreCardMap with the new data
+        Map<String, Score> scoreMap = new HashMap<>();
+        List<Score> scoreList = iplScoreCard.getMatch().getScore();
+        if (scoreList != null) {
+            for (Score score : scoreList) {
+                String inning = score.getInning().replace("Inning 1", "").trim();
+                scoreMap.put(inning, score);
+            }
+        }
+        iplScoreCardApiDto.setScoreList(scoreMap);
+
+        Map<String, ScoreCard> scoreCardMap = new HashMap<>();
+        List<ScoreCard> scoreCardList = iplScoreCard.getMatch().getScorecard();
+        if (scoreCardList != null) {
+            for (ScoreCard scoreCard : scoreCardList) {
+                String inning = scoreCard.getInning().replace("Inning 1", "").trim();
+                scoreCardMap.put(inning, scoreCard);
+            }
+        }
+        iplScoreCardApiDto.setScoreCardList(scoreCardMap);
+
+        // Save the updated entity back to the database
+        IplScoreCardApi savedEntity = iplScoreCardApiRepository.save(IplScoreCardApiMapper.toEntity(iplScoreCardApiDto));
+        return IplScoreCardApiMapper.toDTO(savedEntity);
     }
 
     @Override

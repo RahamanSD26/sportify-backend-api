@@ -43,24 +43,36 @@ public class IplAllMatchesController {
         return new ResponseEntity<>(new CustomPage<>(iplAllMatchesApiService.getMatchById(id), Constants.BLANK_CONSTANT), HttpStatus.OK);
     }
     @GetMapping("/listbystatus/{status}")
-    public ResponseEntity<List<IplAllMatchesApi>> getEntitiesByStatus(@PathVariable(name = "status")boolean isActive) throws Exception {
+    public ResponseEntity<List<IplAllMatchesApiDto>> getEntitiesByStatus(@PathVariable(name = "status")boolean isActive) throws Exception {
         return new ResponseEntity<>(iplAllMatchesApiService.getEntitiesByStatus(isActive),HttpStatus.OK);
     }
     @GetMapping("/listbyvenue/{venue}")
-    public ResponseEntity<List<IplAllMatchesApi>> getEntitiesByVenue(@PathVariable(name = "venue")String venue) throws Exception {
+    public ResponseEntity<List<IplAllMatchesApiDto>> getEntitiesByVenue(@PathVariable(name = "venue")String venue) throws Exception {
         return new ResponseEntity<>(iplAllMatchesApiService.getEntitiesByVenue(venue),HttpStatus.OK);
     }
+    @GetMapping("/listbyvenueandstatus/{venue}")
+    public ResponseEntity<List<IplAllMatchesApiDto>> getEntitiesByVenueAndStatus(@PathVariable(name = "venue")String venue,@RequestParam Boolean status) throws Exception {
+        return new ResponseEntity<>(iplAllMatchesApiService.getEntitiesByVenueAndStatus(venue,status),HttpStatus.OK);
+    }
     @GetMapping("/listbyteamname/{shortName}")
-    public ResponseEntity<List<IplAllMatchesApi>> getEntitiesByTeamName(@PathVariable(name = "shortName")String shortName) throws Exception {
+    public ResponseEntity<List<IplAllMatchesApiDto>> getEntitiesByTeamName(@PathVariable(name = "shortName")String shortName) throws Exception {
         return new ResponseEntity<>(iplAllMatchesApiService.getEntitiesByTeamName(shortName),HttpStatus.OK);
     }
 
+    @GetMapping("/listbyteamnameandstatus/{shortName}")
+    public ResponseEntity<List<IplAllMatchesApiDto>> getEntitiesByTeamNameAndStatus(@PathVariable(name = "shortName")String shortName, @RequestParam Boolean status) throws Exception {
+        return new ResponseEntity<>(iplAllMatchesApiService.getEntitiesByTeamNameAndStatus(shortName,status),HttpStatus.OK);
+    }
     @GetMapping("/listbyteamnameandvenue")
-    public ResponseEntity<List<IplAllMatchesApi>> getEntitiesByTeamNameAndVenue(@RequestParam String shortName,@RequestParam String venue) throws Exception {
+    public ResponseEntity<List<IplAllMatchesApiDto>> getEntitiesByTeamNameAndVenue(@RequestParam String shortName,@RequestParam String venue) throws Exception {
         return new ResponseEntity<>(iplAllMatchesApiService.getEntitiesByTeamNameAndVenue(shortName,venue),HttpStatus.OK);
     }
     @GetMapping("/listbyteamnamevenueandstatus/{status}")
-    public ResponseEntity<List<IplAllMatchesApi>> getEntitiesByTeamNameAndVenueAndSatus(@PathVariable(name = "status") Boolean status,@RequestParam String shortName,@RequestParam String venue) throws Exception {
+    public ResponseEntity<List<IplAllMatchesApiDto>> getEntitiesByTeamNameAndVenueAndSatus(@PathVariable(name = "status") Boolean status,@RequestParam String shortName,@RequestParam String venue) throws Exception {
         return new ResponseEntity<>(iplAllMatchesApiService.getEntitiesByTeamNameAndVenueAndStatus(status,shortName,venue),HttpStatus.OK);
+    }
+    @GetMapping("/listbyasperuser")
+    public ResponseEntity<List<IplAllMatchesApiDto>> getEntitiesAsPerUser(@RequestParam String status,@RequestParam String shortName,@RequestParam String venue)throws Exception{
+        return new ResponseEntity<>(iplAllMatchesApiService.getEntitiesAsPerUser(status,shortName,venue),HttpStatus.OK);
     }
 }

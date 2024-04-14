@@ -14,15 +14,17 @@ import java.util.Optional;
 @Repository
 public interface IplAllMatchesApiRepository extends MongoRepository<IplAllMatchesApi,String> {
    Page<IplAllMatchesApi> findAll(Pageable pageable);
-    List<IplAllMatchesApi> findByIsActiveOrderByIntMatchNumberAsc(Boolean isActive);
-    List<IplAllMatchesApi> findByVenueOrderByIntMatchNumberAsc(String venue);
+    List<IplAllMatchesApiDto> findByIsActiveOrderByIntMatchNumberAsc(Boolean isActive);
+    List<IplAllMatchesApiDto> findByVenueOrderByIntMatchNumberAsc(String venue);
     Optional<IplAllMatchesApi> findByGuid(String guid);
     Optional<IplAllMatchesApi> findTopByOrderByCreatedOnDesc();
     List<IplAllMatchesApiDto> findAllByOrderByIntMatchNumberAsc();
     List<IplAllMatchesApiDto> findByDate(String date);
     Optional<IplAllMatchesApi> findByTime(String time);
     Optional<IplAllMatchesApi> findByMatchId(String id);
-    List<IplAllMatchesApi> findByTeamInfoShortnameOrderByIntMatchNumberAsc(String shortName);
-   List<IplAllMatchesApi> findByTeamInfoShortnameAndVenueOrderByIntMatchNumberAsc(String shortName, String venue);
-   List<IplAllMatchesApi> findByIsActiveAndTeamInfoShortnameAndVenueOrderByIntMatchNumberAsc(Boolean isActive,String shortName, String venue);
+    List<IplAllMatchesApiDto> findByTeamInfoShortnameOrderByIntMatchNumberAsc(String shortName);
+    List<IplAllMatchesApiDto> findByTeamInfoShortnameAndIsActiveOrderByIntMatchNumberAsc(String shortName,Boolean isActive);
+    List<IplAllMatchesApiDto> findByVenueAndIsActiveOrderByIntMatchNumberAsc(String venue,Boolean isActive);
+   List<IplAllMatchesApiDto> findByTeamInfoShortnameAndVenueOrderByIntMatchNumberAsc(String shortName, String venue);
+   List<IplAllMatchesApiDto> findByIsActiveAndTeamInfoShortnameAndVenueOrderByIntMatchNumberAsc(Boolean isActive,String shortName, String venue);
 }

@@ -168,22 +168,22 @@ public class IplAllMatchesApiServiceImpl implements IplAllMatchesApiService{
     public List<IplAllMatchesApiDto> getEntitiesAsPerUser(String status, String shortName, String venue) throws Exception {
         Boolean bStatus=false;
         if (status.equals("null")){
-            if (shortName.equals("Not Selected") && venue.equals("Not Selected")) {
+            if (shortName.equals("ALL TEAMS") && venue.equals("ALL VENUES")) {
                 return getAllEntities();
-            } else if (venue.equals("Not Selected")) {
+            } else if (venue.equals("ALL VENUES")) {
                 return getEntitiesByTeamName(shortName);
-            } else if (shortName.equals("Not Selected")) {
+            } else if (shortName.equals("ALL TEAMS")) {
                 return getEntitiesByVenue(venue);
             } else {
                 return getEntitiesByTeamNameAndVenue(shortName, venue);
             }
         } else {
             if(status.equals("1")||status.equals("true")||status.equals("TRUE")) bStatus=true;
-            if (shortName.equals("Not Selected") && venue.equals("Not Selected")) {
+            if (shortName.equals("ALL TEAMS") && venue.equals("ALL VENUES")) {
                 return getEntitiesByStatus(bStatus);
-            } else if (venue.equals("Not Selected")) {
+            } else if (venue.equals("ALL VENUES")) {
                 return getEntitiesByTeamNameAndStatus(shortName,bStatus);
-            } else if (shortName.equals("Not Selected")) {
+            } else if (shortName.equals("ALL TEAMS")) {
                 return getEntitiesByVenueAndStatus(venue,bStatus);
             } else {
                 return getEntitiesByTeamNameAndVenueAndStatus(bStatus, shortName, venue);

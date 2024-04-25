@@ -57,7 +57,7 @@ public class IplAllMatchesApiMapper {
         return dto;
     }
 
-    public static IplAllMatchesApiDto toUpdatedDTo(IplAllMatchesApiDto currentDto, IplAllMatchesApiDto newDto){
+    public static IplAllMatchesApiDto toUpdatedDTO(IplAllMatchesApiDto currentDto, IplAllMatchesApiDto newDto){
         if(newDto.getVenue()!=null){
             currentDto.setVenue(newDto.getVenue());
         }

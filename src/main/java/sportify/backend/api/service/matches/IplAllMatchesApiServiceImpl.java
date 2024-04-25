@@ -8,9 +8,10 @@ import sportify.backend.api.dto.matches.IplAllMatchesApiDto;
 import sportify.backend.api.mapper.matches.IplAllMatchesApiMapper;
 import sportify.backend.api.repository.matches.IplAllMatchesApiRepository;
 import sportify.backend.api.service.CricketDataService;
-import util.JavaApiClass.CommonUtil;
-import util.JavaApiClass.iplAllMatches.IplAllMatches;
-import util.JavaApiClass.iplAllMatches.Match;
+import sportify.backend.api.util.CommonUtil;
+import sportify.backend.api.util.JavaApiClass.iplAllMatches.IplAllMatches;
+import sportify.backend.api.util.JavaApiClass.iplAllMatches.Match;
+
 
 import java.util.Collections;
 import java.util.List;
@@ -58,6 +59,7 @@ public class IplAllMatchesApiServiceImpl implements IplAllMatchesApiService{
                 if(!match.getStatus().equals(existingMatchOpt.get().getStatus())){
                     IplAllMatchesApiDto iplAllMatchesApiDto=IplAllMatchesApiMapper.toDTO(existingMatchOpt.get());
                     iplAllMatchesApiDto.setStatus(match.getStatus());
+                    iplAllMatchesApiDto.setIsActive(!iplAllMatchesApiDto.getStatus().contains("won")||iplAllMatchesApiDto.getStatus().contains("lost")||iplAllMatchesApiDto.getStatus().contains("tied"));
                     iplAllMatchesApiRepository.save(IplAllMatchesApiMapper.toEntity(iplAllMatchesApiDto));
                 }
             }

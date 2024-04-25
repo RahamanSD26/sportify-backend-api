@@ -1,8 +1,6 @@
 package sportify.backend.api.exception;
 
 
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,9 +9,7 @@ import org.springframework.web.context.request.WebRequest;
 import sportify.backend.api.config.Constants;
 import sportify.backend.api.exception.response.ResponseStatusDTO;
 import sportify.backend.api.pagination.CustomPage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import util.JavaApiClass.CommonUtil;
+import sportify.backend.api.util.CommonUtil;
 
 @ControllerAdvice
 public class BaseExceptionHandler {

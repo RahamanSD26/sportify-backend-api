@@ -2,6 +2,8 @@ server:
   port: 8082
 sidpik:
   environment: LOCAL
+  scrap:
+    pointsTableUrl: https://www.iplt20.com/points-table/men/2024
 spring:
   application:
     name: sportify-backend-api

@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import sportify.backend.api.exception.response.ResponseStatusDTO;
-import util.JavaApiClass.CommonUtil;
+import sportify.backend.api.util.CommonUtil;
 
 import java.util.ArrayList;
 import java.util.List;

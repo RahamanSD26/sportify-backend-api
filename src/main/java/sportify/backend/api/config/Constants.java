@@ -3,6 +3,7 @@ package sportify.backend.api.config;
 public class Constants {
     public static final String CRICK_API_KEY="5f37207c-0754-4f00-a598-3fa9e55c6340";
     public static final String IPL_SERIES_INFO="/series_info";
+    public static final String IPL_MATCH_SQUAD="/match_squad";
     public static final String IPL_ALL_MATCHES_ID="76ae85e2-88e5-4e99-83e4-5f352108aebc";
     public static final String IPL_SCORE_CARD="/match_scorecard";
     public static final String IPL_SCORE_CARD_BALL_BY_BALL="/match_bbb";

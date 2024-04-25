@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface IplAllMatchesApiRepository extends MongoRepository<IplAllMatchesApi,String> {
-   Page<IplAllMatchesApi> findAll(Pageable pageable);
+    Page<IplAllMatchesApi> findAll(Pageable pageable);
     List<IplAllMatchesApiDto> findByIsActiveOrderByIntMatchNumberAsc(Boolean isActive);
     List<IplAllMatchesApiDto> findByVenueOrderByIntMatchNumberAsc(String venue);
     Optional<IplAllMatchesApi> findByGuid(String guid);

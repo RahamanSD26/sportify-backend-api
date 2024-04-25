@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import sportify.backend.api.dto.BaseEntityDTO;
-import util.JavaApiClass.iplAllMatches.TeamInfo;
+import sportify.backend.api.util.JavaApiClass.iplAllMatches.TeamInfo;
 
 import java.util.List;
 @Getter

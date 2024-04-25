@@ -32,5 +32,4 @@ public class IplScoreCardApi extends BaseEntity {
     private Map<String, ScoreCard> scoreCardList;
     private Boolean isMatchStarted;
     private Boolean isMatchEnded;
-
 }

@@ -24,10 +24,12 @@ public class IplScoreCardApiDto extends BaseEntityDTO {
     private String dateTimeGMT;
     private List<TeamInfo> teamInfo;
     private Map<String, Score> scoreList;
+    private List<Score> tempScoreList;
     private String tossWinner;
     private String tossChoice;
     private String seriesId;
     private Map<String, ScoreCard> scoreCardList;
+    private List<ScoreCard> tempScoreCardList;
     private Boolean isMatchStarted;
     private Boolean isMatchEnded;
 }

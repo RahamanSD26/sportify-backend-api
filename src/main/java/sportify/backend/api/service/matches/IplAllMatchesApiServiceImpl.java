@@ -1,6 +1,7 @@
 package sportify.backend.api.service.matches;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import sportify.backend.api.config.Constants;
 import sportify.backend.api.domain.matches.IplAllMatchesApi;
@@ -13,6 +14,8 @@ import sportify.backend.api.util.JavaApiClass.iplAllMatches.IplAllMatches;
 import sportify.backend.api.util.JavaApiClass.iplAllMatches.Match;
 
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +29,9 @@ public class IplAllMatchesApiServiceImpl implements IplAllMatchesApiService{
     @Override
     public List<IplAllMatchesApi> createEntity() throws Exception {
         IplAllMatches iplAllMatches = cricketDataService.fetchDataFromApi(IplAllMatches.class,Constants.IPL_ALL_MATCHES_ID, Constants.IPL_SERIES_INFO);
+        if(iplAllMatches.getData()==null){
+            throw new Exception("All Matches not found from Crick data");
+        }
         List<Match> matchList = iplAllMatches.getData().getMatchList();
 
         for (Match match : matchList) {
@@ -204,5 +210,44 @@ public class IplAllMatchesApiServiceImpl implements IplAllMatchesApiService{
             }
         }
         return CommonUtil.getCustomGeneratedId(Constants.ID_PREFIX_IPL_ALLMATCHES, Constants.ID_PART_NUMBER_COUNT_IPL_ALLMATCHES, serialNumber);
+    }
+    int count=0;
+    String tempDate;
+    @Scheduled(fixedRate = 60*60 * 1000) // 1 hours in milliseconds
+    public void scheduledMethod() throws Exception {
+        // Call your parameterized method with the stored arguments
+
+        LocalDate date=LocalDate.now();
+        String formattedDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+
+        List<IplAllMatchesApiDto> iplAllMatchesApiDtoList=getMatchListByDate(formattedDate);
+        tempDate = iplAllMatchesApiDtoList.get(0).getDate();
+
+        if(iplAllMatchesApiDtoList.size()==2) {
+            if ((!iplAllMatchesApiDtoList.get(0).getIsActive() || !iplAllMatchesApiDtoList.get(1).getIsActive()) && count <= 1) {
+                createEntity();
+                count++;
+            }
+
+            if (!tempDate.equals(formattedDate) &&
+                    (iplAllMatchesApiDtoList.get(0).getStatus().contains("Match not started") ||
+                            iplAllMatchesApiDtoList.get(1).getStatus().contains("Match not started"))) {
+                count = 0;
+            }
+        }else if(iplAllMatchesApiDtoList.size()==1){
+            if (!iplAllMatchesApiDtoList.get(0).getIsActive() && count <= 1) {
+                createEntity();
+                tempDate = iplAllMatchesApiDtoList.get(0).getDate();
+                count++;
+            }
+
+            if (!tempDate.equals(formattedDate) && iplAllMatchesApiDtoList.get(0).getStatus().contains("Match not started")) {
+                count = 0;
+                tempDate=iplAllMatchesApiDtoList.get(0).getDate();
+            }
+        }else{
+            throw new Exception("All Matches List is empty");
+        }
+
     }
 }

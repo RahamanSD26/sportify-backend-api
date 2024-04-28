@@ -8,4 +8,5 @@ public class RestEndPoints {
     public static final String IPL_SCORE_CARD=IPL_API_V1+"/scorecard";
     public static final String IPL_POINTS_TABLE=IPL_API_V1+"/pointstable";
     public static final String IPL_TEAM_SQUAD=IPL_API_V1+"/squad";
+    public static final String IPL_BALL_BY_BALL_DATA=IPL_API_V1+"/ballbyball";
 }

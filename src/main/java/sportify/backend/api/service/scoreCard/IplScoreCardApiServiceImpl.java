@@ -1,9 +1,11 @@
 package sportify.backend.api.service.scoreCard;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import sportify.backend.api.config.Constants;
 import sportify.backend.api.domain.scoreCard.IplScoreCardApi;
@@ -13,6 +15,7 @@ import sportify.backend.api.mapper.scoreCard.IplScoreCardApiMapper;
 import sportify.backend.api.repository.scoreCard.IplScoreCardApiRepository;
 import sportify.backend.api.service.CricketDataService;
 import sportify.backend.api.service.matches.IplAllMatchesApiService;
+import sportify.backend.api.service.pointsTable.IplPointsTableService;
 import sportify.backend.api.util.JavaApiClass.iplscorecard.IplScoreCard;
 import sportify.backend.api.util.JavaApiClass.iplscorecard.Score;
 import sportify.backend.api.util.JavaApiClass.iplscorecard.ScoreCard;
@@ -28,7 +31,9 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
     IplAllMatchesApiService iplAllMatchesApiService;
     @Autowired
     IplScoreCardApiRepository iplScoreCardApiRepository;
-
+    @Lazy
+    @Autowired
+    IplPointsTableService pointsTableService;
     @Override
     public IplScoreCardApiDto createEntity(String time) throws Exception {
         IplAllMatchesApiDto match = iplAllMatchesApiService.getMatchByTime(time);
@@ -37,6 +42,9 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
         }
 
         IplScoreCard iplScoreCard = cricketDataService.fetchDataFromApi(IplScoreCard.class, match.getMatchId(), Constants.IPL_SCORE_CARD);
+        if(iplScoreCard.getMatch()==null){
+            throw new Exception("ScoreCard not Found from CrickData");
+        }
 
         Optional<IplScoreCardApiDto> existingScoreCardOptional = iplScoreCardApiRepository.findByMatchId(iplScoreCard.getMatch().getId());
 
@@ -85,6 +93,12 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
 
         // Save the updated entity back to the database
         IplScoreCardApi savedEntity = iplScoreCardApiRepository.save(IplScoreCardApiMapper.toEntity(iplScoreCardApiDto));
+        if(savedEntity.getIsMatchEnded()){
+            String team1=savedEntity.getTeamInfo().get(0).getShortname();
+            String team2=savedEntity.getTeamInfo().get(1).getShortname();
+            pointsTableService.createEntity(team1);
+            pointsTableService.createEntity(team2);
+        }
         return IplScoreCardApiMapper.toDTO(savedEntity);
     }
 
@@ -104,6 +118,20 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
             return new PageImpl<>(entityPage.getContent().stream().map(IplScoreCardApiMapper::toDTO).collect(Collectors.toList()), pageable, entityPage.getTotalElements());
         } else {
             return new PageImpl<>(new ArrayList<>(), pageable, entityPage.getTotalElements());
+        }
+    }
+
+    @Override
+    public long getEntitiesCountByTeamName(String id) {
+        return iplScoreCardApiRepository.countByTeamInfoShortname(id);
+    }
+
+    @Scheduled(fixedRate = 6*60 * 1000) // 1 min in milliseconds
+    public void scheduledMethod() throws Exception {
+        // Call your parameterized method with the stored arguments
+        List<IplAllMatchesApiDto> iplAllMatchesApiDtoList=iplAllMatchesApiService.getEntitiesByStatus(true);
+        if(iplAllMatchesApiDtoList.get(0).getIsActive()&&!iplAllMatchesApiDtoList.get(0).getStatus().equals("Match not started")){
+            createEntity(iplAllMatchesApiDtoList.get(0).getTime());
         }
     }
 

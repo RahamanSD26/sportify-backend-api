@@ -17,4 +17,5 @@ public interface IplScoreCardApiRepository extends MongoRepository<IplScoreCardA
     Optional<IplScoreCardApi> findByGuid(String guid);
     Optional<IplScoreCardApi> findTopByOrderByCreatedOnDesc();
     Optional<IplScoreCardApiDto> findByMatchId(String id);
+    long countByTeamInfoShortname(String name);
 }

@@ -19,6 +19,7 @@ public class IplSquadApiServiceImpl implements IplSquadApiService{
     CricketDataService cricketDataService;
     @Autowired
     IplSquadApiRepository iplSquadApiRepository;
+
     @Override
     public IplSquadApiDto createEntityById(String id)throws Exception {
 

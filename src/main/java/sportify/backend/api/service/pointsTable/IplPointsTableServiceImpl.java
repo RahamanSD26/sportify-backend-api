@@ -27,7 +27,9 @@ public class IplPointsTableServiceImpl implements IplPointsTableService{
     @Override
     public IplPointsTableDto createEntity(String teamName)throws Exception {
         List<IplAllMatchesApiDto> iplAllMatchesApiDtoList = iplAllMatchesApiService.getEntitiesByTeamNameAndStatus(teamName, false);
-
+        if(iplAllMatchesApiDtoList.size()>iplScoreCardApiService.getEntitiesCountByTeamName(teamName)){
+            throw new Exception("All Score cards are not Available for the given team");
+        }
         if (!iplAllMatchesApiDtoList.isEmpty()) {
             int p = 0;
             int w = 0;
@@ -103,4 +105,3 @@ public class IplPointsTableServiceImpl implements IplPointsTableService{
         return iplPointsTableDtos;
     }
 }
-

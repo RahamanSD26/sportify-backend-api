@@ -54,4 +54,9 @@ public class ScoreCardController {
 
         return new ResponseEntity<>(iplScoreCardApiDto, HttpStatus.CREATED);
     }
+    @GetMapping("/getcountbyteamname/{name}")
+    public ResponseEntity<Long> getEntitiesCountById(@PathVariable(name="name") String name)throws Exception{
+        return new ResponseEntity<>(iplScoreCardApiService.getEntitiesCountByTeamName(name), HttpStatus.OK);
+    }
+
 }

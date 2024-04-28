@@ -9,4 +9,5 @@ public interface IplScoreCardApiService {
   IplScoreCardApiDto createEntity(String dateTime)throws Exception;
   IplScoreCardApiDto getEntityById(String id) throws Exception;
   Page<IplScoreCardApiDto> getAllEntities(Pageable pageable)throws Exception;
+  long getEntitiesCountByTeamName(String id);
 }

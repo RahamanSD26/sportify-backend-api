@@ -56,6 +56,7 @@ public class CricketDataService {
                count=0;
                if(apiSuffixNumber>15) {
                    apiSuffixNumber=1;
+                   throw new Exception("15th Account reached");
                }
             }else if(count>99){
                 apiSuffixNumber++;

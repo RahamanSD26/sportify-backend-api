@@ -71,15 +71,16 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
     public void scheduledMethod() throws Exception {
         // Call your parameterized method with the stored arguments
         List<IplAllMatchesApiDto> iplAllMatchesApiDtoList=iplAllMatchesApiService.getEntitiesByStatus(true);
-
+        IplAllMatchesApiDto iplAllMatchesApiDto=null;
             if (iplAllMatchesApiDtoList.get(0).getIsActive() && !iplAllMatchesApiDtoList.get(0).getStatus().equals("Match not started")) {
                 createEntityById(iplAllMatchesApiDtoList.get(0).getMatchId());
                 if(count==0) {
                     iplAllMatchesApiService.createEntity();
+                    iplAllMatchesApiDto=iplAllMatchesApiDtoList.get(0);
                     count++;
                 }
         }
-            if(!iplAllMatchesApiDtoList.get(0).getIsActive()) count=0;
+            if(iplAllMatchesApiDto!=null&&!iplAllMatchesApiDto.getIsActive()) count=0;
 //        if(iplAllMatchesApiDtoList.size()==2){
 //            if (iplAllMatchesApiDtoList.get(0).getIsActive() && !iplAllMatchesApiDtoList.get(0).getStatus().equals("Match not started")) {
 //                createEntityById(iplAllMatchesApiDtoList.get(0).getMatchId());

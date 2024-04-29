@@ -131,11 +131,13 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
     public void scheduledMethod() throws Exception {
         // Call your parameterized method with the stored arguments
         List<IplAllMatchesApiDto> iplAllMatchesApiDtoList=iplAllMatchesApiService.getEntitiesByStatus(true);
+        IplAllMatchesApiDto currentMatch=null;
         if(iplAllMatchesApiDtoList.get(0).getIsActive()&&!iplAllMatchesApiDtoList.get(0).getStatus().equals("Match not started")){
             createEntity(iplAllMatchesApiDtoList.get(0).getTime());
+            currentMatch=iplAllMatchesApiDtoList.get(0);
         }
-        if(count==0&&!iplAllMatchesApiDtoList.get(0).getIsActive()){
-            createEntity(iplAllMatchesApiDtoList.get(0).getTime());
+        if(currentMatch!=null&&count==0&&!currentMatch.getIsActive()){
+            createEntity(currentMatch.getTime());
             count++;
         } else if (iplAllMatchesApiDtoList.get(0).getIsActive()) {
             count=0;

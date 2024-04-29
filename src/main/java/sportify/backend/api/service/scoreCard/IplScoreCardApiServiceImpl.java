@@ -126,13 +126,19 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
     public long getEntitiesCountByTeamName(String id) {
         return iplScoreCardApiRepository.countByTeamInfoShortname(id);
     }
-
+    int count=0;
     @Scheduled(fixedRate = 6*60 * 1000) // 6 min in milliseconds
     public void scheduledMethod() throws Exception {
         // Call your parameterized method with the stored arguments
         List<IplAllMatchesApiDto> iplAllMatchesApiDtoList=iplAllMatchesApiService.getEntitiesByStatus(true);
         if(iplAllMatchesApiDtoList.get(0).getIsActive()&&!iplAllMatchesApiDtoList.get(0).getStatus().equals("Match not started")){
             createEntity(iplAllMatchesApiDtoList.get(0).getTime());
+        }
+        if(count==0&&!iplAllMatchesApiDtoList.get(0).getIsActive()){
+            createEntity(iplAllMatchesApiDtoList.get(0).getTime());
+            count++;
+        } else if (iplAllMatchesApiDtoList.get(0).getIsActive()) {
+            count=0;
         }
     }
 

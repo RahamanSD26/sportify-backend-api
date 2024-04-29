@@ -78,7 +78,6 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
                     iplAllMatchesApiService.createEntity();
                     count++;
                 }
-
         }
             if(!iplAllMatchesApiDtoList.get(0).getIsActive()) count=0;
 //        if(iplAllMatchesApiDtoList.size()==2){

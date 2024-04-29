@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 public class IplCricketMatch {
     private String apikey;
     private Data data;
+    private Info info;
 }

@@ -25,6 +25,7 @@ public class IplSquadApiServiceImpl implements IplSquadApiService{
 
         if(getEntityById(id)==null) {
             IplSquad iplSquad =cricketDataService.fetchDataFromApi(IplSquad.class,id, Constants.IPL_MATCH_SQUAD);
+            cricketDataService.setCount(iplSquad.getInfo().getHitsUsed());
             if(iplSquad.getData()==null) throw new Exception("Did not Get data from CrickData");
             List<Team> teamList = iplSquad.getData();
             IplSquadApiDto iplSquadApiDto = new IplSquadApiDto();

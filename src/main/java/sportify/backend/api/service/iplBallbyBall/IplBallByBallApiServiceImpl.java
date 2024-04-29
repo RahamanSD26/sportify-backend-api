@@ -28,6 +28,7 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
     @Override
     public IplBallByBallApiDto createEntityById(String matchId) throws Exception {
         IplCricketMatch iplCricketMatch=cricketDataService.fetchDataFromApi(IplCricketMatch.class,matchId, Constants.IPL_SCORE_CARD_BALL_BY_BALL);
+        cricketDataService.setCount(iplCricketMatch.getInfo().getHitsToday());
         if(iplCricketMatch.getData()==null){
             throw new Exception("ball By Ball Data not found From CrickData");
         }

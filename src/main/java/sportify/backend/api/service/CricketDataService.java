@@ -76,5 +76,9 @@ public class CricketDataService {
             System.out.println(response);
             return response;
         }
+
+        public void setCount(int count){
+            this.count=count;
+        }
     }
 

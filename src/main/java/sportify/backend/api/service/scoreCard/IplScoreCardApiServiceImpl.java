@@ -42,6 +42,7 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
         }
 
         IplScoreCard iplScoreCard = cricketDataService.fetchDataFromApi(IplScoreCard.class, match.getMatchId(), Constants.IPL_SCORE_CARD);
+        cricketDataService.setCount(iplScoreCard.getInfo().getHitsUsed());
         if(iplScoreCard.getMatch()==null){
             throw new Exception("ScoreCard not Found from CrickData");
         }

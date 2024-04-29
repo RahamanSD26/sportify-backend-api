@@ -29,6 +29,7 @@ public class IplAllMatchesApiServiceImpl implements IplAllMatchesApiService{
     @Override
     public List<IplAllMatchesApi> createEntity() throws Exception {
         IplAllMatches iplAllMatches = cricketDataService.fetchDataFromApi(IplAllMatches.class,Constants.IPL_ALL_MATCHES_ID, Constants.IPL_SERIES_INFO);
+        cricketDataService.setCount(iplAllMatches.getInfo().getHitsUsed());
         if(iplAllMatches.getData()==null){
             throw new Exception("All Matches not found from Crick data");
         }

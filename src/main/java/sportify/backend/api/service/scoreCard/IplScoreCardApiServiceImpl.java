@@ -126,7 +126,7 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
         return iplScoreCardApiRepository.countByTeamInfoShortname(id);
     }
 
-    @Scheduled(fixedRate = 6*60 * 1000) // 1 min in milliseconds
+    @Scheduled(fixedRate = 6*60 * 1000) // 6 min in milliseconds
     public void scheduledMethod() throws Exception {
         // Call your parameterized method with the stored arguments
         List<IplAllMatchesApiDto> iplAllMatchesApiDtoList=iplAllMatchesApiService.getEntitiesByStatus(true);

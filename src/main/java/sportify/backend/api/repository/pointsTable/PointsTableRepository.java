@@ -16,10 +16,7 @@ import java.util.Optional;
 public interface PointsTableRepository extends MongoRepository<IplPointsTable,String> {
     Page<IplPointsTable> findAll(Pageable pageable);
     @Aggregation(pipeline = {
-            "{ $sort: { PTS: -1, NRR: -1 } }",
-            "{ $group: { _id: '$PTS', teams: { $push: '$$ROOT' } } }",
-            "{ $replaceRoot: { newRoot: { $arrayElemAt: ['$teams', 0] } } }",
-            "{ $sort: { PTS: -1 } }"
+            "{ $sort: { PTS: -1, NRR: -1 } }"
     })
     List<IplPointsTableDto> findAllSortedByPTSAndNRR();
     Optional<IplPointsTableDto> findByTeam(String name);

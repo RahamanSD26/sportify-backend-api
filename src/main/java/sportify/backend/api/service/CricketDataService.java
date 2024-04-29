@@ -18,8 +18,8 @@ public class CricketDataService {
 
     @Autowired
     private WebClient webClient;
-    long count=0;
-    int apiSuffixNumber=1;
+    long count=31;
+    int apiSuffixNumber=7;
 
         public <T> T fetchDataFromApi(Class<T> responseType,String id,String path) throws Exception {
             if(responseType.equals(IplCricketMatch.class)){
@@ -45,14 +45,21 @@ public class CricketDataService {
             apiKeyValue.put(8,Constants.CRICKET_API_KEY_8);
             apiKeyValue.put(9,Constants.CRICKET_API_KEY_9);
             apiKeyValue.put(10,Constants.CRICKET_API_KEY_10);
+            apiKeyValue.put(11,Constants.CRICKET_API_KEY_11);
+            apiKeyValue.put(12,Constants.CRICKET_API_KEY_12);
+            apiKeyValue.put(13,Constants.CRICKET_API_KEY_13);
+            apiKeyValue.put(14,Constants.CRICKET_API_KEY_14);
+            apiKeyValue.put(15,Constants.CRICKET_API_KEY_15);
 
             if(count>90&&responseType.equals(IplScoreCard.class)||responseType.equals(IplSquad.class)){
                apiSuffixNumber++;
                count=0;
-               if(apiSuffixNumber>10) {
+               if(apiSuffixNumber>15) {
                    apiSuffixNumber=1;
-                   throw new Exception("All Crickdata Accounts Used");
                }
+            }else if(count>99){
+                apiSuffixNumber++;
+                count=0;
             }
             T response = webClient.get()
                     .uri(uriBuilder -> uriBuilder

@@ -19,4 +19,5 @@ public interface IplAllMatchesApiService {
  List<IplAllMatchesApiDto> getEntitiesByTeamNameAndVenue(String shortName, String venue)throws Exception;
  List<IplAllMatchesApiDto> getEntitiesByTeamNameAndVenueAndStatus(Boolean status,String shortName, String venue)throws Exception;
  List<IplAllMatchesApiDto> getEntitiesAsPerUser(String status,String shortName, String venue) throws Exception;
+ void scheduledMethod() throws Exception;
 }

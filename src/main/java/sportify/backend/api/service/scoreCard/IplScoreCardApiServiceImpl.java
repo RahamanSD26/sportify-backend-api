@@ -138,6 +138,7 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
         }
         if(currentMatch!=null&&count==0&&!currentMatch.getIsActive()){
             createEntity(currentMatch.getTime());
+            iplAllMatchesApiService.createEntity();
             count++;
         } else if (iplAllMatchesApiDtoList.get(0).getIsActive()) {
             count=0;

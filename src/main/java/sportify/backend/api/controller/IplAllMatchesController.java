@@ -22,7 +22,6 @@ public class IplAllMatchesController {
     private IplAllMatchesApiService iplAllMatchesApiService;
     @PostMapping
     public ResponseEntity<CustomPage<IplAllMatchesApi>> createEntity()throws Exception{
-        iplAllMatchesApiService.scheduledMethod();
         return new ResponseEntity<>(new CustomPage<>(iplAllMatchesApiService.createEntity(), Constants.BLANK_CONSTANT), HttpStatus.CREATED);
     }
 

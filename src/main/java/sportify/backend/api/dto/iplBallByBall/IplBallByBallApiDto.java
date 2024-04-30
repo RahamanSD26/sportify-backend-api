@@ -10,6 +10,8 @@ import sportify.backend.api.util.JavaApiClass.iplBallByBall.Score;
 import sportify.backend.api.util.JavaApiClass.iplBallByBall.TeamInfo;
 
 import java.util.List;
+import java.util.Map;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,7 +25,8 @@ public class IplBallByBallApiDto extends BaseEntityDTO {
     private String date;
     private String dateTimeGmt;
     private List<TeamInfo> teamInfoList;
-    private List<Score> scoreList;
+    private Map<String, Score> scoreList;
+    private List<Score> tempScoreList;
     private String tossWinner;
     private String tossChoice;
 //    private String series_id;

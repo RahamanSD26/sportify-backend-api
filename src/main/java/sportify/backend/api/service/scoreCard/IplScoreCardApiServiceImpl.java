@@ -61,7 +61,7 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
         // Update other fields of the entity if needed
         iplScoreCardApiDto.setName(iplScoreCard.getMatch().getName());
         iplScoreCardApiDto.setVenue(iplScoreCard.getMatch().getVenue());
-        iplScoreCardApiDto.setStatus(iplScoreCard.getStatus());
+        iplScoreCardApiDto.setStatus(iplScoreCard.getMatch().getStatus());
         iplScoreCardApiDto.setDateTimeGMT(iplScoreCard.getMatch().getDateTimeGMT());
         iplScoreCardApiDto.setTeamInfo(iplScoreCard.getMatch().getTeamInfo());
         iplScoreCardApiDto.setTossWinner(iplScoreCard.getMatch().getTossWinner());
@@ -109,7 +109,7 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
         if(iplScoreCardApiDtoOptional.isEmpty()){
             throw new Exception("ScoreCard not found with the given id");
         }
-       return iplScoreCardApiDtoOptional.get();
+       return changeEntityAsPerRequirement(iplScoreCardApiDtoOptional.get());
     }
 
     @Override
@@ -127,22 +127,53 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
         return iplScoreCardApiRepository.countByTeamInfoShortname(id);
     }
     int count=0;
+    List<IplAllMatchesApiDto> iplAllMatchesApiDtoList=null;
+    IplAllMatchesApiDto currentMatch=null;
     @Scheduled(fixedRate = 6*60 * 1000) // 6 min in milliseconds
     public void scheduledMethod() throws Exception {
         // Call your parameterized method with the stored arguments
-        List<IplAllMatchesApiDto> iplAllMatchesApiDtoList=iplAllMatchesApiService.getEntitiesByStatus(true);
-        IplAllMatchesApiDto currentMatch=null;
-        if(iplAllMatchesApiDtoList.get(0).getIsActive()&&!iplAllMatchesApiDtoList.get(0).getStatus().equals("Match not started")){
-            createEntity(iplAllMatchesApiDtoList.get(0).getTime());
-            currentMatch=iplAllMatchesApiDtoList.get(0);
-        }
-        if(currentMatch!=null&&count==0&&!currentMatch.getIsActive()){
+       if(count==0){
+           iplAllMatchesApiService.createEntity();
+           iplAllMatchesApiDtoList=iplAllMatchesApiService.getEntitiesByStatus(true);
+           currentMatch=iplAllMatchesApiDtoList.get(0);
+           count++;
+       }
+
+
+        if(currentMatch.getIsActive()&&!currentMatch.getStatus().equals("Match not started")){
             createEntity(currentMatch.getTime());
-            iplAllMatchesApiService.createEntity();
-            count++;
-        } else if (iplAllMatchesApiDtoList.get(0).getIsActive()) {
+        }
+
+        if(!currentMatch.getIsActive()){
+            createEntity(currentMatch.getTime());
             count=0;
         }
+    }
+
+    public IplScoreCardApiDto changeEntityAsPerRequirement(IplScoreCardApiDto iplScoreCardApiDto){
+        String team1=iplScoreCardApiDto.getTeamInfo().get(0).getName();
+        String team2=iplScoreCardApiDto.getTeamInfo().get(1).getName();
+
+        List<Score> scoreList=new ArrayList<>();
+        List<ScoreCard> scoreCardList=new ArrayList<>();
+
+        if(team1.equals(iplScoreCardApiDto.getTossWinner())&&iplScoreCardApiDto.getTossChoice().equals("bat")){
+            scoreList.add(iplScoreCardApiDto.getScoreList().get(team1));
+            scoreList.add(iplScoreCardApiDto.getScoreList().get(team2));
+
+            scoreCardList.add(iplScoreCardApiDto.getScoreCardList().get(team1));
+            scoreCardList.add(iplScoreCardApiDto.getScoreCardList().get(team2));
+        }else{
+            scoreList.add(iplScoreCardApiDto.getScoreList().get(team2));
+            scoreList.add(iplScoreCardApiDto.getScoreList().get(team1));
+
+            scoreCardList.add(iplScoreCardApiDto.getScoreCardList().get(team2));
+            scoreCardList.add(iplScoreCardApiDto.getScoreCardList().get(team1));
+        }
+
+        iplScoreCardApiDto.setTempScoreList(scoreList);
+        iplScoreCardApiDto.setTempScoreCardList(scoreCardList);
+        return iplScoreCardApiDto;
     }
 
 }

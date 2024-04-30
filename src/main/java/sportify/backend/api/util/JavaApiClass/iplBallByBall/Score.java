@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 public class Score {
     private int r;
     private int w;
-    private int o;
+    private float o;
     private String inning;
 }

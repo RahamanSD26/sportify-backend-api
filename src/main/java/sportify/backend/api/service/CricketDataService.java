@@ -18,9 +18,10 @@ public class CricketDataService {
 
     @Autowired
     private WebClient webClient;
-    long count=31;
-    int apiSuffixNumber=7;
-
+    long count=0;
+    int apiSuffixNumber=2;
+    Map<Integer, String> apiKeyValue;
+    int track=0;
         public <T> T fetchDataFromApi(Class<T> responseType,String id,String path) throws Exception {
             if(responseType.equals(IplCricketMatch.class)){
                   count++;
@@ -32,24 +33,25 @@ public class CricketDataService {
             }else {
                count+=10;
             }
-
-            Map<Integer,String> apiKeyValue=new HashMap<>();
-
-            apiKeyValue.put(1,Constants.CRICKET_API_KEY_1);
-            apiKeyValue.put(2,Constants.CRICKET_API_KEY_2);
-            apiKeyValue.put(3,Constants.CRICKET_API_KEY_3);
-            apiKeyValue.put(4,Constants.CRICKET_API_KEY_4);
-            apiKeyValue.put(5,Constants.CRICKET_API_KEY_5);
-            apiKeyValue.put(6,Constants.CRICKET_API_KEY_6);
-            apiKeyValue.put(7,Constants.CRICKET_API_KEY_7);
-            apiKeyValue.put(8,Constants.CRICKET_API_KEY_8);
-            apiKeyValue.put(9,Constants.CRICKET_API_KEY_9);
-            apiKeyValue.put(10,Constants.CRICKET_API_KEY_10);
-            apiKeyValue.put(11,Constants.CRICKET_API_KEY_11);
-            apiKeyValue.put(12,Constants.CRICKET_API_KEY_12);
-            apiKeyValue.put(13,Constants.CRICKET_API_KEY_13);
-            apiKeyValue.put(14,Constants.CRICKET_API_KEY_14);
-            apiKeyValue.put(15,Constants.CRICKET_API_KEY_15);
+           if(track==0) {
+               apiKeyValue = new HashMap<>();
+               apiKeyValue.put(1, Constants.CRICKET_API_KEY_1);
+               apiKeyValue.put(2, Constants.CRICKET_API_KEY_2);
+               apiKeyValue.put(3, Constants.CRICKET_API_KEY_3);
+               apiKeyValue.put(4, Constants.CRICKET_API_KEY_4);
+               apiKeyValue.put(5, Constants.CRICKET_API_KEY_5);
+               apiKeyValue.put(6, Constants.CRICKET_API_KEY_6);
+               apiKeyValue.put(7, Constants.CRICKET_API_KEY_7);
+               apiKeyValue.put(8, Constants.CRICKET_API_KEY_8);
+               apiKeyValue.put(9, Constants.CRICKET_API_KEY_9);
+               apiKeyValue.put(10, Constants.CRICKET_API_KEY_10);
+               apiKeyValue.put(11, Constants.CRICKET_API_KEY_11);
+               apiKeyValue.put(12, Constants.CRICKET_API_KEY_12);
+               apiKeyValue.put(13, Constants.CRICKET_API_KEY_13);
+               apiKeyValue.put(14, Constants.CRICKET_API_KEY_14);
+               apiKeyValue.put(15, Constants.CRICKET_API_KEY_15);
+               track++;
+           }
 
             if(count>90&&responseType.equals(IplScoreCard.class)||responseType.equals(IplSquad.class)){
                apiSuffixNumber++;

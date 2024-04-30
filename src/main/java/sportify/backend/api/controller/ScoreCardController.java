@@ -35,24 +35,7 @@ public class ScoreCardController {
     }
     @GetMapping("/getscorecard/{id}")
     public ResponseEntity<IplScoreCardApiDto> getScoreCardById(@PathVariable(name="id") String id)throws Exception{
-       IplScoreCardApiDto iplScoreCardApiDto=iplScoreCardApiService.getEntityById(id);
-
-       String team1=iplScoreCardApiDto.getTeamInfo().get(0).getName();
-       String team2=iplScoreCardApiDto.getTeamInfo().get(1).getName();
-
-       List<Score> scoreList=new ArrayList<>();
-       List<ScoreCard> scoreCardList=new ArrayList<>();
-
-       scoreList.add(iplScoreCardApiDto.getScoreList().get(team1));
-       scoreList.add(iplScoreCardApiDto.getScoreList().get(team2));
-
-       scoreCardList.add(iplScoreCardApiDto.getScoreCardList().get(team1));
-       scoreCardList.add(iplScoreCardApiDto.getScoreCardList().get(team2));
-
-       iplScoreCardApiDto.setTempScoreList(scoreList);
-       iplScoreCardApiDto.setTempScoreCardList(scoreCardList);
-
-        return new ResponseEntity<>(iplScoreCardApiDto, HttpStatus.CREATED);
+        return new ResponseEntity<>(iplScoreCardApiService.getEntityById(id), HttpStatus.CREATED);
     }
     @GetMapping("/getcountbyteamname/{name}")
     public ResponseEntity<Long> getEntitiesCountById(@PathVariable(name="name") String name)throws Exception{

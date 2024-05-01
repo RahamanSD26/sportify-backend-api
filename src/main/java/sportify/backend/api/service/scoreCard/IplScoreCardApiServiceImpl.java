@@ -153,13 +153,14 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
            count++;
        }
 
-
         if(currentMatch.getIsActive()&&!currentMatch.getStatus().equals("Match not started")){
-            createEntity(currentMatch.getTime());
+         IplScoreCardApiDto iplScoreCardApiDto=createEntity(currentMatch.getTime());
+            if(iplScoreCardApiDto.getStatus().contains("won")||iplScoreCardApiDto.getStatus().contains("lost")||iplScoreCardApiDto.getStatus().contains("tied")){
+                createEntity(currentMatch.getTime());
+            }
         }
 
         if(!currentMatch.getIsActive()){
-            createEntity(currentMatch.getTime());
             count=0;
         }
     }

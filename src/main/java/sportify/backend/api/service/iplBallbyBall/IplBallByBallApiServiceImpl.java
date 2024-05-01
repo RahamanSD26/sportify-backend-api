@@ -125,11 +125,13 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
 
 
         if (iplAllMatchesApiDto.getIsActive() && !iplAllMatchesApiDto.getStatus().equals("Match not started")) {
-                createEntityById(iplAllMatchesApiDtoList.get(0).getMatchId());
+            IplBallByBallApiDto iplBallByBallApiDto=createEntityById(iplAllMatchesApiDtoList.get(0).getMatchId());
+                if(iplBallByBallApiDto.getStatus().contains("won")||iplBallByBallApiDto.getStatus().contains("lost")||iplBallByBallApiDto.getStatus().contains("tied")){
+                    iplAllMatchesApiService.createEntity();
+                }
         }
             if(!iplAllMatchesApiDto.getIsActive()){
                 count=0;
-                iplAllMatchesApiService.createEntity();
             }
 //        if(iplAllMatchesApiDtoList.size()==2){
 //            if (iplAllMatchesApiDtoList.get(0).getIsActive() && !iplAllMatchesApiDtoList.get(0).getStatus().equals("Match not started")) {

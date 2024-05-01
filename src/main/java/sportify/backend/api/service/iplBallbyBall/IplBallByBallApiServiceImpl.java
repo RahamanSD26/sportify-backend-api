@@ -141,13 +141,9 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
 
         List<Score> scoreList=new ArrayList<>();
 
-        if(team1.equals(iplBallByBallApiDto.getTossWinner())&&iplBallByBallApiDto.getTossChoice().equals("bat")){
             scoreList.add(iplBallByBallApiDto.getScoreList().get(team1));
             scoreList.add(iplBallByBallApiDto.getScoreList().get(team2));
-        }else{
-            scoreList.add(iplBallByBallApiDto.getScoreList().get(team2));
-            scoreList.add(iplBallByBallApiDto.getScoreList().get(team1));
-        }
+
 
         iplBallByBallApiDto.setTempScoreList(scoreList);
         return iplBallByBallApiDto;

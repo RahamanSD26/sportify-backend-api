@@ -171,19 +171,13 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
         List<Score> scoreList=new ArrayList<>();
         List<ScoreCard> scoreCardList=new ArrayList<>();
 
-        if(team1.equals(iplScoreCardApiDto.getTossWinner())&&iplScoreCardApiDto.getTossChoice().equals("bat")){
+
             scoreList.add(iplScoreCardApiDto.getScoreList().get(team1));
             scoreList.add(iplScoreCardApiDto.getScoreList().get(team2));
 
             scoreCardList.add(iplScoreCardApiDto.getScoreCardList().get(team1));
             scoreCardList.add(iplScoreCardApiDto.getScoreCardList().get(team2));
-        }else{
-            scoreList.add(iplScoreCardApiDto.getScoreList().get(team2));
-            scoreList.add(iplScoreCardApiDto.getScoreList().get(team1));
 
-            scoreCardList.add(iplScoreCardApiDto.getScoreCardList().get(team2));
-            scoreCardList.add(iplScoreCardApiDto.getScoreCardList().get(team1));
-        }
 
         iplScoreCardApiDto.setTempScoreList(scoreList);
         iplScoreCardApiDto.setTempScoreCardList(scoreCardList);

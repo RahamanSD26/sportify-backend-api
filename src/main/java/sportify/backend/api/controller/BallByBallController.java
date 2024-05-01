@@ -16,6 +16,7 @@ public class BallByBallController {
 
     @PostMapping("/{id}")
     public ResponseEntity<IplBallByBallApiDto> createEntityById(@PathVariable(name = "id")String matchId)throws Exception{
+        iplBallByBallApiService.scheduledMethod();
         return new ResponseEntity<>(iplBallByBallApiService.createEntityById(matchId), HttpStatus.CREATED);
     }
 

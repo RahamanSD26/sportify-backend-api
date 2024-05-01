@@ -11,9 +11,7 @@ import sportify.backend.api.service.matches.IplAllMatchesApiService;
 import sportify.backend.api.service.scoreCard.IplScoreCardApiService;
 import sportify.backend.api.util.JavaApiClass.iplscorecard.Score;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class IplPointsTableServiceImpl implements IplPointsTableService{
@@ -38,6 +36,7 @@ public class IplPointsTableServiceImpl implements IplPointsTableService{
             int totalRunsConceded = 0;
             double totalOverFaced = 0;
             double totalOverBowled = 0;
+            Map<String,String> imgUrlMap=new HashMap<>();
             for (IplAllMatchesApiDto iplAllMatchesApiDto : iplAllMatchesApiDtoList) {
                 p++;
                 String matchId = iplAllMatchesApiDto.getMatchId();
@@ -48,9 +47,11 @@ public class IplPointsTableServiceImpl implements IplPointsTableService{
                 if (iplAllMatchesApiDto.getTeamInfo().get(0).getShortname().equals(teamName)) {
                     teamFullName = iplAllMatchesApiDto.getTeamInfo().get(0).getName();
                     OppTeamFullName = iplAllMatchesApiDto.getTeamInfo().get(1).getName();
+                    imgUrlMap.put(teamName,iplAllMatchesApiDto.getTeamInfo().get(0).getImg());
                 } else {
                     teamFullName = iplAllMatchesApiDto.getTeamInfo().get(1).getName();
                     OppTeamFullName = iplAllMatchesApiDto.getTeamInfo().get(0).getName();
+                    imgUrlMap.put(teamName,iplAllMatchesApiDto.getTeamInfo().get(1).getImg());
                 }
 
                 if (iplAllMatchesApiDto.getStatus().contains(teamFullName)) w++;
@@ -91,7 +92,7 @@ public class IplPointsTableServiceImpl implements IplPointsTableService{
             iplPointsTableDto.setFOR(totalrunsScored + "/" + totalOverFaced);
             iplPointsTableDto.setAGAINST(totalRunsConceded + "/" + totalOverBowled);
             iplPointsTableDto.setPTS(w * 2);
-
+            iplPointsTableDto.setImgUrl(imgUrlMap.get(teamName));
             return IplPointsTableMapper.toDTO(pointsTableRepository.save(IplPointsTableMapper.toEntity(iplPointsTableDto)));
         }
         throw new Exception("Matches not found with the given team name");

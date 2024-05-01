@@ -11,15 +11,15 @@ import sportify.backend.api.dto.BaseEntityDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IplPointsTableDto extends BaseEntityDTO {
-    String pos;
-    String team;
-    String P;
-    String W;
-    String L;
-    Integer NR;
-    Float NRR;
-    String FOR;
-    String AGAINST;
-    Integer PTS;
-
+    private String pos;
+    private String team;
+    private String P;
+    private String W;
+    private String L;
+    private Integer NR;
+    private Float NRR;
+    private String FOR;
+    private String AGAINST;
+    private Integer PTS;
+    private String imgUrl;
 }

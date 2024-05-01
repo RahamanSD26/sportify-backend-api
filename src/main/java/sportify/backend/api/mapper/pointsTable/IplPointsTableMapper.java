@@ -28,6 +28,7 @@ public class IplPointsTableMapper {
         entity.setPTS(dto.getPTS());
         entity.setFOR(dto.getFOR());
         entity.setAGAINST(dto.getAGAINST());
+        entity.setImgUrl(dto.getImgUrl());
         return entity;
     }
 
@@ -54,6 +55,7 @@ public class IplPointsTableMapper {
         dto.setPTS(entity.getPTS());
         dto.setFOR(entity.getFOR());
         dto.setAGAINST(entity.getAGAINST());
+        dto.setImgUrl(entity.getImgUrl());
         return dto;
     }
 
@@ -87,6 +89,9 @@ public class IplPointsTableMapper {
         }
         if(newDto.getAGAINST()!=null){
             currentDto.setAGAINST(newDto.getAGAINST());
+        }
+        if(newDto.getImgUrl()!=null){
+            currentDto.setImgUrl(newDto.getImgUrl());
         }
         return currentDto;
     }

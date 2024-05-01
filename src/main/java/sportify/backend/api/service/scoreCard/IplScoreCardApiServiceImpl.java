@@ -19,6 +19,7 @@ import sportify.backend.api.service.pointsTable.IplPointsTableService;
 import sportify.backend.api.util.JavaApiClass.iplscorecard.IplScoreCard;
 import sportify.backend.api.util.JavaApiClass.iplscorecard.Score;
 import sportify.backend.api.util.JavaApiClass.iplscorecard.ScoreCard;
+import sportify.backend.api.util.JavaApiClass.iplscorecard.TeamInfo;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -63,13 +64,26 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
         iplScoreCardApiDto.setVenue(iplScoreCard.getMatch().getVenue());
         iplScoreCardApiDto.setStatus(iplScoreCard.getMatch().getStatus());
         iplScoreCardApiDto.setDateTimeGMT(iplScoreCard.getMatch().getDateTimeGMT());
-        iplScoreCardApiDto.setTeamInfo(iplScoreCard.getMatch().getTeamInfo());
         iplScoreCardApiDto.setTossWinner(iplScoreCard.getMatch().getTossWinner());
         iplScoreCardApiDto.setTossChoice(iplScoreCard.getMatch().getTossChoice());
         iplScoreCardApiDto.setSeriesId(iplScoreCard.getMatch().getSeries_id());
         iplScoreCardApiDto.setMatchId(iplScoreCard.getMatch().getId());
         iplScoreCardApiDto.setIsMatchStarted(iplScoreCard.getMatch().isMatchStarted());
         iplScoreCardApiDto.setIsMatchEnded(iplScoreCard.getMatch().isMatchEnded());
+
+        String team=iplScoreCard.getMatch().getTeamInfo().get(0).getName();
+
+        List<TeamInfo> teamInfoList=new ArrayList<>();
+
+        if(team.equals(iplScoreCard.getMatch().getTossWinner())&&iplScoreCard.getMatch().getTossChoice().equals("bat")){
+            teamInfoList.add(iplScoreCard.getMatch().getTeamInfo().get(0));
+            teamInfoList.add(iplScoreCard.getMatch().getTeamInfo().get(1));
+        }else{
+            teamInfoList.add(iplScoreCard.getMatch().getTeamInfo().get(1));
+            teamInfoList.add(iplScoreCard.getMatch().getTeamInfo().get(0));
+        }
+        iplScoreCardApiDto.setTeamInfo(teamInfoList);
+
 
         // Update scoreMap and scoreCardMap with the new data
         Map<String, Score> scoreMap = new HashMap<>();

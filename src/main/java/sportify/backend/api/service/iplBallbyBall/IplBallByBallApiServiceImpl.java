@@ -6,18 +6,16 @@ import org.springframework.stereotype.Service;
 import sportify.backend.api.config.Constants;
 import sportify.backend.api.dto.iplBallByBall.IplBallByBallApiDto;
 import sportify.backend.api.dto.matches.IplAllMatchesApiDto;
-import sportify.backend.api.dto.scoreCard.IplScoreCardApiDto;
 import sportify.backend.api.mapper.iplBallByBall.IplBallByBallApiMapper;
 import sportify.backend.api.repository.iplBallbyBall.IplBallByBallApiRepositoty;
 import sportify.backend.api.service.CricketDataService;
 import sportify.backend.api.service.matches.IplAllMatchesApiService;
 import sportify.backend.api.util.JavaApiClass.iplBallByBall.IplCricketMatch;
 import sportify.backend.api.util.JavaApiClass.iplBallByBall.Score;
-import sportify.backend.api.util.JavaApiClass.iplscorecard.ScoreCard;
+import sportify.backend.api.util.JavaApiClass.iplBallByBall.TeamInfo;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -54,11 +52,27 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
          iplBallByBallApiDto.setVenue(iplCricketMatch.getData().getVenue());
          iplBallByBallApiDto.setDate(iplCricketMatch.getData().getDate());
          iplBallByBallApiDto.setDateTimeGmt(iplCricketMatch.getData().getDateTimeGMT());
-         iplBallByBallApiDto.setTeamInfoList(iplCricketMatch.getData().getTeamInfo());
          iplBallByBallApiDto.setTossWinner(iplCricketMatch.getData().getTossWinner());
          iplBallByBallApiDto.setTossChoice(iplCricketMatch.getData().getTossChoice());
 //         iplBallByBallApiDto.setSeries_id(iplCricketMatch.getData().getSeries_id());
          iplBallByBallApiDto.setCommentary(iplCricketMatch.getData().getBbb());
+
+
+        String team1=iplCricketMatch.getData().getTeamInfo().get(0).getName();
+
+        List<TeamInfo> teamInfoList=new ArrayList<>();
+
+        if(team1.equals(iplCricketMatch.getData().getTossWinner())&&iplCricketMatch.getData().getTossChoice().equals("bat")){
+            teamInfoList.add(iplCricketMatch.getData().getTeamInfo().get(0));
+            teamInfoList.add(iplCricketMatch.getData().getTeamInfo().get(1));
+        }else{
+            teamInfoList.add(iplCricketMatch.getData().getTeamInfo().get(1));
+            teamInfoList.add(iplCricketMatch.getData().getTeamInfo().get(0));
+        }
+
+        iplBallByBallApiDto.setTeamInfoList(teamInfoList);
+
+
 
         Map<String, Score> scoreMap=new HashMap<>();
         List<Score> scoreList=iplCricketMatch.getData().getScore();
@@ -94,6 +108,17 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
             iplAllMatchesApiDto = iplAllMatchesApiDtoList.get(0);
             count++;
         }
+
+        LocalDateTime targetDateTime = LocalDateTime.parse(iplAllMatchesApiDto.getTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        LocalDateTime nowWithGMT = LocalDateTime.now(ZoneOffset.UTC); // Get current time in GMT
+
+        // Check if within 3 minutes of target time (assuming code already inside scheduledMethod)
+        if (nowWithGMT.isAfter(targetDateTime.minusMinutes(2)) && nowWithGMT.isBefore(targetDateTime.plusMinutes(2))) {
+            // Call your specific code here
+            iplAllMatchesApiService.createEntity();
+            // Your code to be executed within the 3-minute window
+        }
+
             if (iplAllMatchesApiDto.getIsActive() && !iplAllMatchesApiDto.getStatus().equals("Match not started")) {
                 createEntityById(iplAllMatchesApiDtoList.get(0).getMatchId());
         }

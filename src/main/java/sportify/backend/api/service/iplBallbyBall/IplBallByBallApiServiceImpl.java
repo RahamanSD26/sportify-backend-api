@@ -14,6 +14,7 @@ import sportify.backend.api.util.JavaApiClass.iplBallByBall.IplCricketMatch;
 import sportify.backend.api.util.JavaApiClass.iplBallByBall.Score;
 import sportify.backend.api.util.JavaApiClass.iplBallByBall.TeamInfo;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -96,51 +97,49 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
         }
         return  changeEntityAsPerRequirement(iplBallByBallApiDtoOptional.get());
     }
-    int count=0;
-    List<IplAllMatchesApiDto> iplAllMatchesApiDtoList=null;
-    IplAllMatchesApiDto iplAllMatchesApiDto=null;
+
+    private int count = 0;
+    private List<IplAllMatchesApiDto> iplAllMatchesApiDtoList;
+
     @Scheduled(fixedRate = 60 * 1000) // 1 min in milliseconds
-    public void scheduledMethod() throws Exception {
-        // Call your parameterized method with the stored arguments
-        if(count==0) {
-            iplAllMatchesApiService.createEntity();
-            iplAllMatchesApiDtoList= iplAllMatchesApiService.getEntitiesByStatus(true);
-            iplAllMatchesApiDto = iplAllMatchesApiDtoList.get(0);
-            count++;
-        }
+    public void scheduledMethod() {
+        try {
+            LocalDate date=LocalDate.now();
+            String today = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
 
-        // Get the current time in GMT
-        LocalDateTime nowWithGMT = LocalDateTime.now(ZoneOffset.UTC);
-
-        // Parse the match time from your data
-        String matchTime = iplAllMatchesApiDto.getTime(); // Example match time
-        LocalDateTime matchDateTime = LocalDateTime.parse(matchTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-
-        // Check if within 2 minutes of match time
-        if (nowWithGMT.isAfter(matchDateTime.minusMinutes(2)) && nowWithGMT.isBefore(matchDateTime.plusMinutes(2))) {
-            // Call your specific code here
-           iplAllMatchesApiService.createEntity(); // Example method call
-            // Your code to be executed within the 2-minute window
-        }
-
-
-        if (iplAllMatchesApiDto.getIsActive() && !iplAllMatchesApiDto.getStatus().equals("Match not started")) {
-            IplBallByBallApiDto iplBallByBallApiDto=createEntityById(iplAllMatchesApiDtoList.get(0).getMatchId());
-                if(iplBallByBallApiDto.getStatus().contains("won")||iplBallByBallApiDto.getStatus().contains("lost")||iplBallByBallApiDto.getStatus().contains("tied")){
-                    iplAllMatchesApiService.createEntity();
-                }
-        }
-            if(!iplAllMatchesApiDto.getIsActive()){
-                count=0;
+            // Initialize match data if not already initialized
+            if (count == 0) {
+                initializeMatchData(today);
+                count++;
             }
-//        if(iplAllMatchesApiDtoList.size()==2){
-//            if (iplAllMatchesApiDtoList.get(0).getIsActive() && !iplAllMatchesApiDtoList.get(0).getStatus().equals("Match not started")) {
-//                createEntityById(iplAllMatchesApiDtoList.get(0).getMatchId());
-//            } else if(iplAllMatchesApiDtoList.get(1).getIsActive() && !iplAllMatchesApiDtoList.get(1).getStatus().equals("Match not started")) {
-//                createEntityById(iplAllMatchesApiDtoList.get(1).getMatchId());
-//            }
-//        }
+
+
+            // Check if there are any active matches scheduled for today
+            for (IplAllMatchesApiDto match : iplAllMatchesApiDtoList) {
+                String matchDate = match.getDate();
+                if (matchDate.equals(today) && match.getIsActive() && !match.getStatus().equals("Match not started")) {
+                    // If match is active, check if it's live
+                    if (match.getIsActive() && !match.getStatus().contains("won") && !match.getStatus().contains("lost") && !match.getStatus().contains("tied")) {
+                        // Call ball-by-ball API for the live match
+                        IplBallByBallApiDto ballByBallData = createEntityById(match.getMatchId());
+                    } else {
+                        // If match has ended, reset count and reinitialize match data
+                        count = 0;
+                        initializeMatchData(today);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Handle exceptions gracefully
+            e.printStackTrace();
+        }
     }
+
+    private void initializeMatchData(String date) throws Exception {
+        iplAllMatchesApiService.createEntity();
+        iplAllMatchesApiDtoList = iplAllMatchesApiService.getMatchListByDate(date);
+    }
+
 
     public IplBallByBallApiDto changeEntityAsPerRequirement(IplBallByBallApiDto iplBallByBallApiDto){
         String team1=iplBallByBallApiDto.getTeamInfoList().get(0).getName();

@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import sportify.backend.api.config.Constants;
 import sportify.backend.api.domain.scoreCard.IplScoreCardApi;
+import sportify.backend.api.dto.iplBallByBall.IplBallByBallApiDto;
 import sportify.backend.api.dto.matches.IplAllMatchesApiDto;
 import sportify.backend.api.dto.scoreCard.IplScoreCardApiDto;
 import sportify.backend.api.mapper.scoreCard.IplScoreCardApiMapper;
@@ -21,6 +22,8 @@ import sportify.backend.api.util.JavaApiClass.iplscorecard.Score;
 import sportify.backend.api.util.JavaApiClass.iplscorecard.ScoreCard;
 import sportify.backend.api.util.JavaApiClass.iplscorecard.TeamInfo;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -145,25 +148,41 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
     IplAllMatchesApiDto currentMatch=null;
     @Scheduled(fixedRate = 6*60 * 1000) // 6 min in milliseconds
     public void scheduledMethod() throws Exception {
-        // Call your parameterized method with the stored arguments
-       if(count==0){
-           iplAllMatchesApiService.createEntity();
-           iplAllMatchesApiDtoList=iplAllMatchesApiService.getEntitiesByStatus(true);
-           currentMatch=iplAllMatchesApiDtoList.get(0);
-           count++;
-       }
+        try {
+            LocalDate date=LocalDate.now();
+            String today = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
 
-        if(currentMatch.getIsActive()&&!currentMatch.getStatus().equals("Match not started")){
-         IplScoreCardApiDto iplScoreCardApiDto=createEntity(currentMatch.getTime());
-            if(iplScoreCardApiDto.getStatus().contains("won")||iplScoreCardApiDto.getStatus().contains("lost")||iplScoreCardApiDto.getStatus().contains("tied")){
-                createEntity(currentMatch.getTime());
+            // Initialize match data if not already initialized
+            if (count == 0) {
+                initializeMatchData(today);
+                count++;
             }
-        }
 
-        if(!currentMatch.getIsActive()){
-            count=0;
+            // Check if there are any active matches scheduled for today
+            for (IplAllMatchesApiDto match : iplAllMatchesApiDtoList) {
+                String matchDate = match.getDate();
+                if (matchDate.equals(today) && match.getIsActive() && !match.getStatus().equals("Match not started")) {
+                    // If match is active, check if it's live
+                    if (match.getIsActive() && !match.getStatus().contains("won") && !match.getStatus().contains("lost") && !match.getStatus().contains("tied")) {
+                        // Call ball-by-ball API for the live match
+                        IplScoreCardApiDto iplScoreCardApiDto = createEntity(match.getTime());
+                    } else {
+                        // If match has ended, reset count and reinitialize match data
+                        count = 0;
+                        createEntity(match.getTime());
+                        initializeMatchData(today);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Handle exceptions gracefully
+            e.printStackTrace();
         }
     }
+        private void initializeMatchData(String date) throws Exception {
+            iplAllMatchesApiService.createEntity();
+            iplAllMatchesApiDtoList = iplAllMatchesApiService.getMatchListByDate(date);
+        }
 
     public IplScoreCardApiDto changeEntityAsPerRequirement(IplScoreCardApiDto iplScoreCardApiDto){
         String team1=iplScoreCardApiDto.getTeamInfo().get(0).getName();

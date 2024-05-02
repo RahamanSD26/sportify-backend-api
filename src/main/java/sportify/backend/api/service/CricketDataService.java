@@ -19,7 +19,7 @@ public class CricketDataService {
     @Autowired
     private WebClient webClient;
     long count=0;
-    int apiSuffixNumber=7;
+    int apiSuffixNumber=1;
     Map<Integer, String> apiKeyValue;
     int track=0;
         public <T> T fetchDataFromApi(Class<T> responseType,String id,String path) throws Exception {

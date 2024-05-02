@@ -122,6 +122,9 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
                     if (match.getIsActive() && !match.getStatus().contains("won") && !match.getStatus().contains("lost") && !match.getStatus().contains("tied")) {
                         // Call ball-by-ball API for the live match
                         IplBallByBallApiDto ballByBallData = createEntityById(match.getMatchId());
+                        if(ballByBallData.getStatus().contains("won") && !match.getStatus().contains("lost")){
+                            iplAllMatchesApiService.createEntity();
+                        }
                     } else {
                         // If match has ended, reset count and reinitialize match data
                         count = 0;

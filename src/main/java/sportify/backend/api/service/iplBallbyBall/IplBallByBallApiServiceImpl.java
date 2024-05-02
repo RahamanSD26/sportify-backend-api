@@ -130,6 +130,18 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
                         count = 0;
                         initializeMatchData(today);
                     }
+                }else{
+                    // Parse the match time string in GMT format (assuming ISO 8601)
+                    LocalDateTime targetDateTime = LocalDateTime.parse(match.getTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
+                    // Get current time in GMT
+                    LocalDateTime nowWithGMT = LocalDateTime.now(ZoneOffset.UTC);
+
+                    // Check if within 3 minutes of target time (inclusive)
+                    if(nowWithGMT.isAfter(targetDateTime.minusMinutes(3)) && nowWithGMT.isBefore(targetDateTime.plusMinutes(3))){
+                       iplAllMatchesApiService.createEntity();
+                    }
+
                 }
             }
         } catch (Exception e) {

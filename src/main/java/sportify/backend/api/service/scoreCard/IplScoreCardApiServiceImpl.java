@@ -22,7 +22,7 @@ import sportify.backend.api.util.JavaApiClass.iplscorecard.Score;
 import sportify.backend.api.util.JavaApiClass.iplscorecard.ScoreCard;
 import sportify.backend.api.util.JavaApiClass.iplscorecard.TeamInfo;
 
-import java.time.LocalDate;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -171,6 +171,25 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
                         count = 0;
                         createEntity(match.getTime());
                         initializeMatchData(today);
+                    }
+                    // Parse the target time string in GMT format (assuming ISO 8601)
+                    LocalDateTime targetDateTimeGMT = LocalDateTime.parse(match.getTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
+                    // Convert target time to Indian Standard Time (IST)
+                    ZoneId indianTimeZone = ZoneId.of("Asia/Kolkata");
+                    ZonedDateTime targetDateTimeIST = targetDateTimeGMT.atZone(ZoneOffset.UTC).withZoneSameInstant(indianTimeZone);
+
+                    // Get current time in IST
+                    LocalDateTime nowWithIST = LocalDateTime.now(indianTimeZone);
+
+                    // Define start and end times for the range (7:30 PM to 7:33 PM IST)
+                    LocalTime startTime = LocalTime.of(19, 30);
+                    LocalTime endTime = LocalTime.of(19, 33);
+
+                    // Check if the current time is within the specified range
+                    if (nowWithIST.toLocalTime().isAfter(startTime) && nowWithIST.toLocalTime().isBefore(endTime)) {
+                        // Call your method here
+                        createEntity(match.getTime());
                     }
                 }
             }

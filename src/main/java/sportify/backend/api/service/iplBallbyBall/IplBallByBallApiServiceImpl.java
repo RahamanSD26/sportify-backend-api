@@ -14,9 +14,7 @@ import sportify.backend.api.util.JavaApiClass.iplBallByBall.IplCricketMatch;
 import sportify.backend.api.util.JavaApiClass.iplBallByBall.Score;
 import sportify.backend.api.util.JavaApiClass.iplBallByBall.TeamInfo;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -131,16 +129,26 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
                         initializeMatchData(today);
                     }
                 }else{
-                    // Parse the match time string in GMT format (assuming ISO 8601)
-                    LocalDateTime targetDateTime = LocalDateTime.parse(match.getTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                    // Parse the target time string in GMT format (assuming ISO 8601)
+                    LocalDateTime targetDateTimeGMT = LocalDateTime.parse(match.getTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-                    // Get current time in GMT
-                    LocalDateTime nowWithGMT = LocalDateTime.now(ZoneOffset.UTC);
+                   // Convert target time to Indian Standard Time (IST)
+                    ZoneId indianTimeZone = ZoneId.of("Asia/Kolkata");
+                    ZonedDateTime targetDateTimeIST = targetDateTimeGMT.atZone(ZoneOffset.UTC).withZoneSameInstant(indianTimeZone);
 
-                    // Check if within 3 minutes of target time (inclusive)
-                    if(nowWithGMT.isAfter(targetDateTime.minusMinutes(3)) && nowWithGMT.isBefore(targetDateTime.plusMinutes(3))){
-                       iplAllMatchesApiService.createEntity();
+                    // Get current time in IST
+                    LocalDateTime nowWithIST = LocalDateTime.now(indianTimeZone);
+
+                   // Define start and end times for the range (7:30 PM to 7:33 PM IST)
+                    LocalTime startTime = LocalTime.of(19, 30);
+                    LocalTime endTime = LocalTime.of(19, 33);
+
+                    // Check if the current time is within the specified range
+                    if (nowWithIST.toLocalTime().isAfter(startTime) && nowWithIST.toLocalTime().isBefore(endTime)) {
+                        // Call your method here
+                        iplAllMatchesApiService.createEntity();
                     }
+
 
                 }
             }

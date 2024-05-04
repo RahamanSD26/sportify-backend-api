@@ -129,26 +129,23 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
                         initializeMatchData(today);
                     }
                 }else{
-                    // Parse the target time string in GMT format (assuming ISO 8601)
+                    // Parse the target time string from the match object (assuming it has a time property)
                     LocalDateTime targetDateTimeGMT = LocalDateTime.parse(match.getTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-                   // Convert target time to Indian Standard Time (IST)
+                    // Convert target time to Indian Standard Time (IST)
                     ZoneId indianTimeZone = ZoneId.of("Asia/Kolkata");
-                    ZonedDateTime targetDateTimeIST = targetDateTimeGMT.atZone(ZoneOffset.UTC).withZoneSameInstant(indianTimeZone);
+                    LocalDateTime targetDateTimeIST = targetDateTimeGMT.atZone(ZoneOffset.UTC).withZoneSameInstant(indianTimeZone).toLocalDateTime();
 
                     // Get current time in IST
                     LocalDateTime nowWithIST = LocalDateTime.now(indianTimeZone);
 
-                   // Define start and end times for the range (7:30 PM to 7:33 PM IST)
-                    LocalTime startTime = LocalTime.of(19, 30);
-                    LocalTime endTime = LocalTime.of(19, 33);
+                    // Check if within 3 minutes of target time in IST (inclusive)
+                    boolean withinWindow = nowWithIST.isAfter(targetDateTimeIST.minusMinutes(1)) && nowWithIST.isBefore(targetDateTimeIST.plusMinutes(3));
 
-                    // Check if the current time is within the specified range
-                    if (nowWithIST.toLocalTime().isAfter(startTime) && nowWithIST.toLocalTime().isBefore(endTime)) {
+                    if (withinWindow) {
                         // Call your method here
                         iplAllMatchesApiService.createEntity();
                     }
-
 
                 }
             }

@@ -110,7 +110,9 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
                 initializeMatchData(today);
                 count++;
             }
-
+            if(!iplAllMatchesApiDtoList.get(0).getDate().equals(today)){
+                count=0;
+            }
 
             // Check if there are any active matches scheduled for today
             for (IplAllMatchesApiDto match : iplAllMatchesApiDtoList) {
@@ -122,41 +124,31 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
                         IplBallByBallApiDto ballByBallData = createEntityById(match.getMatchId());
                         if (ballByBallData.getStatus().contains("won") && !match.getStatus().contains("lost")) {
                             iplAllMatchesApiService.createEntity();
+                            count = 0;
+                            initializeMatchData(today);
                         }
-                    } else {
-                        // If match has ended, reset count and reinitialize match data
-                        count = 0;
-                        initializeMatchData(today);
                     }
                 } else {
-                    // Parse the match time string in GMT format (assuming ISO 8601)
-                    LocalDateTime targetDateTime = LocalDateTime.parse(match.getTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                    // Parse the target time string in GMT format (assuming ISO 8601)
-                    LocalDateTime targetDateTimeGMT = LocalDateTime.parse(match.getTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                    // Get the current time in the local time zone (Asia/Kolkata)
+                    ZoneId localTimeZone = ZoneId.of("Asia/Kolkata");
+                    LocalDateTime now = LocalDateTime.now(localTimeZone);
 
-                    // Get current time in GMT
-                    LocalDateTime nowWithGMT = LocalDateTime.now(ZoneOffset.UTC);
-                    // Convert target time to Indian Standard Time (IST)
-                    ZoneId indianTimeZone = ZoneId.of("Asia/Kolkata");
-                    ZonedDateTime targetDateTimeIST = targetDateTimeGMT.atZone(ZoneOffset.UTC).withZoneSameInstant(indianTimeZone);
+                    // Define the start and end times for the time window for each match
+                    LocalDateTime match1StartTime = LocalDateTime.of(now.toLocalDate(), LocalTime.of(15, 35)); // First match starts at 3:30 PM
+                    LocalDateTime match1EndTime = LocalDateTime.of(now.toLocalDate(), LocalTime.of(15, 33)); // First match ends at 3:33 PM
+                    LocalDateTime match2StartTime = LocalDateTime.of(now.toLocalDate(), LocalTime.of(19, 30)); // Second match starts at 7:30 PM
+                    LocalDateTime match2EndTime = LocalDateTime.of(now.toLocalDate(), LocalTime.of(19, 35)); // Second match ends at 7:33 PM
 
-                    // Check if within 3 minutes of target time (inclusive)
-                    if (nowWithGMT.isAfter(targetDateTime.minusMinutes(3)) && nowWithGMT.isBefore(targetDateTime.plusMinutes(3))) {
+                    // Check if the current time is within the time window for the first match
+                    if (now.isAfter(match1StartTime) && now.isBefore(match1EndTime)) {
+                        // Call the method to create the match entity for the first match
                         iplAllMatchesApiService.createEntity();
-                        // Get current time in IST
-                        LocalDateTime nowWithIST = LocalDateTime.now(indianTimeZone);
+                    }
 
-                        // Define start and end times for the range (7:30 PM to 7:33 PM IST)
-                        LocalTime startTime = LocalTime.of(19, 30);
-                        LocalTime endTime = LocalTime.of(19, 33);
-                        LocalTime startTimeAfternoon = LocalTime.of(15, 30);
-                        LocalTime endTimeAfternoon = LocalTime.of(15, 33);
-
-                        // Check if the current time is within the specified range
-                        if (nowWithIST.toLocalTime().isAfter(startTime) && nowWithIST.toLocalTime().isBefore(endTime)||nowWithIST.toLocalTime().isAfter(startTimeAfternoon) && nowWithIST.toLocalTime().isBefore(endTimeAfternoon)) {
-                            // Call your method here
-                            iplAllMatchesApiService.createEntity();
-                        }
+                    // Check if the current time is within the time window for the second match
+                    if (now.isAfter(match2StartTime) && now.isBefore(match2EndTime)) {
+                        // Call the method to create the match entity for the second match
+                        iplAllMatchesApiService.createEntity();
                     }
                 }
             }

@@ -156,6 +156,9 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
                 initializeMatchData(today);
                 count++;
             }
+            if(!iplAllMatchesApiDtoList.get(0).getDate().equals(today)){
+                count=0;
+            }
 
             // Check if there are any active matches scheduled for today
             for (IplAllMatchesApiDto match : iplAllMatchesApiDtoList) {
@@ -165,34 +168,34 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
                     if (match.getIsActive() && !match.getStatus().contains("won") && !match.getStatus().contains("lost") && !match.getStatus().contains("tied")) {
                         // Call IplScoreCard API for the live match
                         IplScoreCardApiDto iplScoreCardApiDto = createEntity(match.getTime());
-                    } else {
-                        // If match has ended, reset count and reinitialize match data
-                        count = 0;
-                        createEntity(match.getTime());
-                        initializeMatchData(today);
                     }
-                } else {
-                    // Parse the target time string in GMT format (assuming ISO 8601)
-                    LocalDateTime targetDateTimeGMT = LocalDateTime.parse(match.getTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-
-                    // Convert target time to Indian Standard Time (IST)
-                    ZoneId indianTimeZone = ZoneId.of("Asia/Kolkata");
-                    ZonedDateTime targetDateTimeIST = targetDateTimeGMT.atZone(ZoneOffset.UTC).withZoneSameInstant(indianTimeZone);
-
-                    // Get current time in IST
-                    LocalDateTime nowWithIST = LocalDateTime.now(indianTimeZone);
-
-                    // Define start and end times for the range (7:30 PM to 7:33 PM IST)
-                    LocalTime startTime = LocalTime.of(23, 30);
-                    LocalTime endTime = LocalTime.of(23, 45);
-                    LocalTime startTimeAfternoon = LocalTime.of(19, 0);
-                    LocalTime endTimeAfternoon = LocalTime.of(19, 30);
-
-                    // Check if the current time is within the specified range
-                    if (nowWithIST.toLocalTime().isAfter(startTime) && nowWithIST.toLocalTime().isBefore(endTime)||nowWithIST.toLocalTime().isAfter(startTimeAfternoon) && nowWithIST.toLocalTime().isBefore(endTimeAfternoon)) {
-                        // Call your method here
-                        createEntity(match.getTime());
-                    }
+                }
+//                else {
+//                    // Parse the target time string in GMT format (assuming ISO 8601)
+//                    LocalDateTime targetDateTimeGMT = LocalDateTime.parse(match.getTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+//
+//                    // Convert target time to Indian Standard Time (IST)
+//                    ZoneId indianTimeZone = ZoneId.of("Asia/Kolkata");
+//                    ZonedDateTime targetDateTimeIST = targetDateTimeGMT.atZone(ZoneOffset.UTC).withZoneSameInstant(indianTimeZone);
+//
+//                    // Get current time in IST
+//                    LocalDateTime nowWithIST = LocalDateTime.now(indianTimeZone);
+//
+//                    // Define start and end times for the range (7:30 PM to 7:33 PM IST)
+//                    LocalTime startTime = LocalTime.of(23, 20);
+//                    LocalTime endTime = LocalTime.of(23, 45);
+//                    LocalTime startTimeAfternoon = LocalTime.of(19, 0);
+//                    LocalTime endTimeAfternoon = LocalTime.of(19, 30);
+//
+//                    // Check if the current time is within the specified range
+//                    if ((nowWithIST.toLocalTime().isAfter(startTime) && nowWithIST.toLocalTime().isBefore(endTime))||(nowWithIST.toLocalTime().isAfter(startTimeAfternoon) && nowWithIST.toLocalTime().isBefore(endTimeAfternoon))) {
+//                        // Call your method here
+//                        createEntity(match.getTime());
+//                    }
+//                }
+                if(!match.getIsActive()){
+                    createEntity(match.getTime());
+                    initializeMatchData(today);
                 }
             }
         } catch (Exception e) {

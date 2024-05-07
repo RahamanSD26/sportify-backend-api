@@ -106,12 +106,9 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
             String today = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
 
             // Initialize match data if not already initialized
-            if (count == 0) {
+            if (count == 0||!iplAllMatchesApiDtoList.get(0).getDate().equals(today)) {
                 initializeMatchData(today);
                 count++;
-            }
-            if(!iplAllMatchesApiDtoList.get(0).getDate().equals(today)){
-                count=0;
             }
 
             // Check if there are any active matches scheduled for today
@@ -143,12 +140,14 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
                     if (now.isAfter(match1StartTime) && now.isBefore(match1EndTime)) {
                         // Call the method to create the match entity for the first match
                         iplAllMatchesApiService.createEntity();
+                        initializeMatchData(today);
                     }
 
                     // Check if the current time is within the time window for the second match
                     if (now.isAfter(match2StartTime) && now.isBefore(match2EndTime)) {
                         // Call the method to create the match entity for the second match
                         iplAllMatchesApiService.createEntity();
+                        initializeMatchData(today);
                     }
                 }
             }

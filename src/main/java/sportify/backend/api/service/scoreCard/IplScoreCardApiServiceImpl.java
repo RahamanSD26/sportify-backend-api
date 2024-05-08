@@ -152,12 +152,9 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
             String today = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
 
             // Initialize match data if not already initialized
-            if (count == 0) {
+            if (count == 0||!iplAllMatchesApiDtoList.get(0).getDate().equals(today)) {
                 initializeMatchData(today);
                 count++;
-            }
-            if(!iplAllMatchesApiDtoList.get(0).getDate().equals(today)){
-                count=0;
             }
 
             // Check if there are any active matches scheduled for today
@@ -171,27 +168,27 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
                     }
                 }
 //                else {
-//                    // Parse the target time string in GMT format (assuming ISO 8601)
-//                    LocalDateTime targetDateTimeGMT = LocalDateTime.parse(match.getTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-//
-//                    // Convert target time to Indian Standard Time (IST)
-//                    ZoneId indianTimeZone = ZoneId.of("Asia/Kolkata");
-//                    ZonedDateTime targetDateTimeIST = targetDateTimeGMT.atZone(ZoneOffset.UTC).withZoneSameInstant(indianTimeZone);
-//
-//                    // Get current time in IST
-//                    LocalDateTime nowWithIST = LocalDateTime.now(indianTimeZone);
-//
-//                    // Define start and end times for the range (7:30 PM to 7:33 PM IST)
-//                    LocalTime startTime = LocalTime.of(23, 20);
-//                    LocalTime endTime = LocalTime.of(23, 45);
-//                    LocalTime startTimeAfternoon = LocalTime.of(19, 0);
-//                    LocalTime endTimeAfternoon = LocalTime.of(19, 30);
-//
-//                    // Check if the current time is within the specified range
-//                    if ((nowWithIST.toLocalTime().isAfter(startTime) && nowWithIST.toLocalTime().isBefore(endTime))||(nowWithIST.toLocalTime().isAfter(startTimeAfternoon) && nowWithIST.toLocalTime().isBefore(endTimeAfternoon))) {
-//                        // Call your method here
-//                        createEntity(match.getTime());
-//                    }
+                    // Get the current time in the local time zone (Asia/Kolkata)
+                    ZoneId localTimeZone = ZoneId.of("Asia/Kolkata");
+                    LocalDateTime now = LocalDateTime.now(localTimeZone);
+
+                    // Define the start and end times for the time window for each match
+                    LocalDateTime match1StartTime = LocalDateTime.of(now.toLocalDate(), LocalTime.of(15, 35)); // First match starts at 3:30 PM
+                    LocalDateTime match1EndTime = LocalDateTime.of(now.toLocalDate(), LocalTime.of(15, 33)); // First match ends at 3:33 PM
+                    LocalDateTime match2StartTime = LocalDateTime.of(now.toLocalDate(), LocalTime.of(19, 30)); // Second match starts at 7:30 PM
+                    LocalDateTime match2EndTime = LocalDateTime.of(now.toLocalDate(), LocalTime.of(19, 35)); // Second match ends at 7:33 PM
+
+                    // Check if the current time is within the time window for the first match
+                    if (now.isAfter(match1StartTime) && now.isBefore(match1EndTime)) {
+                        // Call the method to create the match entity for the first match
+                        initializeMatchData(today);
+                    }
+
+                    // Check if the current time is within the time window for the second match
+                    if (now.isAfter(match2StartTime) && now.isBefore(match2EndTime)) {
+                        // Call the method to create the match entity for the second match
+                        initializeMatchData(today);
+                    }
 //                }
                 if(!match.getIsActive()){
                     createEntity(match.getTime());

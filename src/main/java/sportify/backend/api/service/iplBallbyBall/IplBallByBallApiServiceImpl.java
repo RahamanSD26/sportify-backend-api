@@ -139,14 +139,12 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
                     // Check if the current time is within the time window for the first match
                     if (now.isAfter(match1StartTime) && now.isBefore(match1EndTime)) {
                         // Call the method to create the match entity for the first match
-                        iplAllMatchesApiService.createEntity();
                         initializeMatchData(today);
                     }
 
                     // Check if the current time is within the time window for the second match
                     if (now.isAfter(match2StartTime) && now.isBefore(match2EndTime)) {
                         // Call the method to create the match entity for the second match
-                        iplAllMatchesApiService.createEntity();
                         initializeMatchData(today);
                     }
                 }

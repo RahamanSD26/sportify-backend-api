@@ -58,10 +58,10 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
 
 
         String team1=iplCricketMatch.getData().getTeamInfo().get(0).getName();
-
+        String team2=iplCricketMatch.getData().getTeamInfo().get(1).getName();
         List<TeamInfo> teamInfoList=new ArrayList<>();
 
-        if(team1.equals(iplCricketMatch.getData().getTossWinner())&&iplCricketMatch.getData().getTossChoice().equals("bat")){
+        if((team1.equals(iplCricketMatch.getData().getTossWinner())&&iplCricketMatch.getData().getTossChoice().equals("bat"))||(team2.equals(iplCricketMatch.getData().getTossWinner())&&!iplCricketMatch.getData().getTossChoice().equals("bat"))){
             teamInfoList.add(iplCricketMatch.getData().getTeamInfo().get(0));
             teamInfoList.add(iplCricketMatch.getData().getTeamInfo().get(1));
         }else{

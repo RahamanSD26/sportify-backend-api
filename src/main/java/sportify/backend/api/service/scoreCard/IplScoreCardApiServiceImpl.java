@@ -74,10 +74,11 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
         iplScoreCardApiDto.setIsMatchEnded(iplScoreCard.getMatch().isMatchEnded());
 
         String team=iplScoreCard.getMatch().getTeamInfo().get(0).getName();
+        String teamSec=iplScoreCard.getMatch().getTeamInfo().get(1).getName();
 
         List<TeamInfo> teamInfoList=new ArrayList<>();
 
-        if(team.equals(iplScoreCard.getMatch().getTossWinner())&&iplScoreCard.getMatch().getTossChoice().equals("bat")){
+        if((team.equals(iplScoreCard.getMatch().getTossWinner())&&iplScoreCard.getMatch().getTossChoice().equals("bat"))||(teamSec.equals(iplScoreCard.getMatch().getTossWinner())&&!iplScoreCard.getMatch().getTossChoice().equals("bat"))){
             teamInfoList.add(iplScoreCard.getMatch().getTeamInfo().get(0));
             teamInfoList.add(iplScoreCard.getMatch().getTeamInfo().get(1));
         }else{
@@ -85,7 +86,6 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
             teamInfoList.add(iplScoreCard.getMatch().getTeamInfo().get(0));
         }
         iplScoreCardApiDto.setTeamInfo(teamInfoList);
-
 
         // Update scoreMap and scoreCardMap with the new data
         Map<String, Score> scoreMap = new HashMap<>();

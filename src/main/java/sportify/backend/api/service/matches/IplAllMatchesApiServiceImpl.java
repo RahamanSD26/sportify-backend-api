@@ -66,7 +66,7 @@ public class IplAllMatchesApiServiceImpl implements IplAllMatchesApiService{
                 if(!match.getStatus().equals(existingMatchOpt.get().getStatus())){
                     IplAllMatchesApiDto iplAllMatchesApiDto=IplAllMatchesApiMapper.toDTO(existingMatchOpt.get());
                     iplAllMatchesApiDto.setStatus(match.getStatus());
-                    iplAllMatchesApiDto.setIsActive(!iplAllMatchesApiDto.getStatus().contains("won")||iplAllMatchesApiDto.getStatus().contains("lost")||iplAllMatchesApiDto.getStatus().contains("tied"));
+                    iplAllMatchesApiDto.setIsActive(!iplAllMatchesApiDto.getStatus().contains("won")||iplAllMatchesApiDto.getStatus().contains("lost")||iplAllMatchesApiDto.getStatus().contains("tied")||iplAllMatchesApiDto.getStatus().contains("There is no scorecard available for this match."));
                     iplAllMatchesApiRepository.save(IplAllMatchesApiMapper.toEntity(iplAllMatchesApiDto));
                 }
             }

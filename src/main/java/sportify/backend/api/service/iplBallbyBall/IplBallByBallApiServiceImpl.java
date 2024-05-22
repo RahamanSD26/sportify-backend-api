@@ -131,7 +131,7 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
                     LocalDateTime now = LocalDateTime.now(localTimeZone);
 
                     // Define the start and end times for the time window for each match
-                    LocalDateTime match1StartTime = LocalDateTime.of(now.toLocalDate(), LocalTime.of(15, 35)); // First match starts at 3:30 PM
+                    LocalDateTime match1StartTime = LocalDateTime.of(now.toLocalDate(), LocalTime.of(15, 30)); // First match starts at 3:30 PM
                     LocalDateTime match1EndTime = LocalDateTime.of(now.toLocalDate(), LocalTime.of(19, 0)); // First match ends at 3:33 PM
                     LocalDateTime match2StartTime = LocalDateTime.of(now.toLocalDate(), LocalTime.of(19, 30)); // Second match starts at 7:30 PM
                     LocalDateTime match2EndTime = LocalDateTime.of(now.toLocalDate(), LocalTime.of(23, 30)); // Second match ends at 7:33 PM

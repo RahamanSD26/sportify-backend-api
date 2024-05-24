@@ -106,7 +106,7 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
             String today = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
 
             // Initialize match data if not already initialized
-            if (count == 0||!iplAllMatchesApiDtoList.get(0).getDate().equals(today)) {
+            if (count == 0||(!iplAllMatchesApiDtoList.isEmpty()&&!iplAllMatchesApiDtoList.get(0).getDate().equals(today))) {
                 initializeMatchData(today);
                 count++;
             }

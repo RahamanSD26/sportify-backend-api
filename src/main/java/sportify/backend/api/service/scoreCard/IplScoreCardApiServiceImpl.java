@@ -147,7 +147,7 @@ public class IplScoreCardApiServiceImpl implements IplScoreCardApiService {
     int count=0;
     List<IplAllMatchesApiDto> iplAllMatchesApiDtoList=null;
     IplAllMatchesApiDto currentMatch=null;
-    @Scheduled(fixedRate = 6*60 * 1000) // 6 min in milliseconds
+//    @Scheduled(fixedRate = 6*60 * 1000) // 6 min in milliseconds
     public void scheduledMethod() throws Exception {
         try {
             LocalDate date=LocalDate.now();

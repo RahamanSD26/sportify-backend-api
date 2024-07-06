@@ -99,7 +99,7 @@ public class IplBallByBallApiServiceImpl implements IplBallByBallApiService{
     private int count = 0;
     private List<IplAllMatchesApiDto> iplAllMatchesApiDtoList;
 
-    @Scheduled(fixedRate = 60 * 1000) // 1 min in milliseconds
+//    @Scheduled(fixedRate = 60 * 1000) // 1 min in milliseconds
     public void scheduledMethod() {
         try {
             LocalDate date=LocalDate.now();
